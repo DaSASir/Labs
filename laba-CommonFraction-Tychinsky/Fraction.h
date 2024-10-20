@@ -7,33 +7,37 @@ public:
     void Scan();
     void Print() const;
 
-    bool Checking_for_correctness();
+    bool IsCorrectness();
 
     Fraction Addition(const Fraction d2) const;
     Fraction Deduction(const Fraction d2) const;
     Fraction Multiplication(const Fraction d2) const;
     Fraction Division(const Fraction d2) const;
 
-    Fraction operator + (const Fraction d2);
-    Fraction operator - (const Fraction d2);
-    Fraction operator * (const Fraction d2);
-    Fraction operator / (const Fraction d2);
+    Fraction operator + (const Fraction d2) const;
+    Fraction operator - (const Fraction d2) const;
+    Fraction operator * (const Fraction d2) const;
+    Fraction operator / (const Fraction d2) const;
 
-    bool operator > (const Fraction d2);
-    bool operator < (const Fraction d2);
-    bool operator == (const Fraction d2);
-    bool operator != (const Fraction d2);
+    bool operator > (const Fraction d2) const;
+    bool operator < (const Fraction d2) const;
+    bool operator == (const Fraction d2) const;
+    bool operator != (const Fraction d2) const;
 
-    int GiveMeNumerator() const;
-    int GiveMeDenominator() const;
+    int GetNumerator() const;
+    int GetDenominator() const;
 
-    void cutting();
-    int NOD();
+    void Cut();
+    int GreatestCommonDivisor();
 
     //собственные функции
     Fraction operator + (const int cheese);
     Fraction operator - (const int cheese);
     void WholePartPrint();
+
+    //установление числителя и знаменателя
+    void EstablishmentNumerator(int cheese);
+    void EstablishmentDenominator(int cheese);
 
 private:
 

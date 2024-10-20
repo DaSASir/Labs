@@ -5,7 +5,7 @@ using namespace std;
 
 Fraction::Fraction (): numerator(1), denominator(1) { }
 Fraction::Fraction(const int a, const int b) : numerator(a), denominator(b) {
-    if (!Checking_for_correctness())
+    if (!IsCorrectness())
         denominator = 1;
 }
 
@@ -14,7 +14,7 @@ void Fraction::Scan() {
     cin >> numerator;
     cout << "¬ведите знаменатель: ";
     cin >> denominator;
-    while (!Checking_for_correctness()) {
+    while (!IsCorrectness()) {
         cout << "¬ведите знаменатель не равный 0: ";
         cin >> denominator;
     }
@@ -23,7 +23,7 @@ void Fraction::Print() const {
     cout << numerator << "/" << denominator << endl;
 }
 
-bool Fraction::Checking_for_correctness() {
+bool Fraction::IsCorrectness() {
     return !(denominator == 0);
 }
 
@@ -31,7 +31,7 @@ Fraction Fraction::Addition(const Fraction d2) const {
     Fraction d3;
     d3.denominator = denominator * d2.denominator;
     d3.numerator = numerator * d2.denominator + d2.numerator * denominator;
-    d3.cutting();
+    d3.Cut();
     return d3;
 }
 Fraction Fraction::Deduction(const Fraction d2) const {
@@ -44,64 +44,64 @@ Fraction Fraction::Deduction(const Fraction d2) const {
         d3.denominator = denominator * d2.denominator;
         d3.numerator = numerator * d2.denominator - d2.numerator * denominator;
     }
-    d3.cutting();
+    d3.Cut();
     return d3;
 }
 Fraction Fraction::Multiplication(const Fraction d2) const {
     Fraction d3;
     d3.numerator = numerator * d2.numerator;
     d3.denominator = denominator * d2.denominator;
-    d3.cutting();
+    d3.Cut();
     return d3;
 }
 Fraction Fraction::Division(const Fraction d2) const {
     Fraction d3;
     d3.numerator = numerator * d2.denominator;
     d3.denominator = denominator * d2.numerator;
-    d3.cutting();
+    d3.Cut();
     return d3;
 }
 
-Fraction Fraction::operator + (const Fraction d2) {
+Fraction Fraction::operator + (const Fraction d2) const {
     return Addition(d2);
 }
-Fraction Fraction::operator - (const Fraction d2) {
+Fraction Fraction::operator - (const Fraction d2) const {
     return Deduction(d2);
 }
-Fraction Fraction::operator * (const Fraction d2) {
+Fraction Fraction::operator * (const Fraction d2) const {
     return Multiplication(d2);
 }
-Fraction Fraction::operator / (const Fraction d2) {
+Fraction Fraction::operator / (const Fraction d2) const {
     return Division(d2);
 }
 
-bool Fraction::operator > (const Fraction d2) {
+bool Fraction::operator > (const Fraction d2) const {
     return ((numerator * d2.denominator) > (d2.numerator * denominator));
 }
-bool Fraction::operator < (const Fraction d2) {
+bool Fraction::operator < (const Fraction d2) const {
     return !(operator > (d2));
 }
-bool Fraction::operator == (const Fraction d2) {
+bool Fraction::operator == (const Fraction d2) const {
     return numerator == d2.numerator && denominator == d2.denominator;
 }
-bool Fraction::operator != (const Fraction d2) {
+bool Fraction::operator != (const Fraction d2) const{
     return !(operator == (d2));
 }
 
-int Fraction::GiveMeNumerator() const {
+int Fraction::GetNumerator() const {
     return numerator;
 }
-int Fraction::GiveMeDenominator() const {
+int Fraction::GetDenominator() const {
     return denominator;
 }
 
-void Fraction::cutting() {
-    int nod = NOD();
+void Fraction::Cut() {
+    int nod = GreatestCommonDivisor();
     numerator /= nod;
     denominator /= nod;
 }
 
-int Fraction::NOD() {
+int Fraction::GreatestCommonDivisor() {
     int c1 = numerator, c2 = denominator;
     if (c1 < 0)
         c1 *= (-1);
@@ -132,4 +132,12 @@ void Fraction::WholePartPrint() {
         wholepart++;
     }
     cout << "ƒробь с целочисленными значени€ выгл€дит так: " << wholepart << " " << ch << "/" << zn;
+}
+
+//установление
+void Fraction::EstablishmentNumerator(int cheese) {
+    numerator = cheese;
+}
+void Fraction::EstablishmentDenominator(int cheese) {
+    denominator = cheese;
 }

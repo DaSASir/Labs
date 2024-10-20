@@ -10,7 +10,7 @@ int main() {
     cout << "Введите кол-во городов: ";
     cin >> gauge;
 
-    int** matrix = new int*[gauge];//матрица стоимости путей
+    int** matrix = new int* [gauge];//матрица стоимости путей
 
     Create_Matrix_of_cities(matrix, gauge, 9, 1);
     cout << endl << "Вывод нашей матрицы путей: " << endl;
@@ -25,6 +25,6 @@ int main() {
     }
 
     int* Path = new int[gauge + 1];//схема пути
-    
+
 
 }

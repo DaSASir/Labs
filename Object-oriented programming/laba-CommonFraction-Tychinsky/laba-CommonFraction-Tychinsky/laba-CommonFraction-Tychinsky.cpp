@@ -4,7 +4,7 @@
 using namespace std;
 
 int main() {
-    setlocale(LC_ALL, "ru");
+    system("chcp 1251");
     Fraction f1, f2(3,5), f3;
 
     cout << "Введите дробь f1: " << endl; 

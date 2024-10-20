@@ -10,6 +10,7 @@ Fraction::Fraction(const int a, const int b) : numerator(a), denominator(b) {
 }
 
 void Fraction::Scan() {
+    system("chcp 1251");
     cout << "¬ведите числитель: ";
     cin >> numerator;
     cout << "¬ведите знаменатель: ";
@@ -125,8 +126,9 @@ Fraction Fraction::operator - (const int cheese) {
     return d3;
 }
 void Fraction::WholePartPrint() {
+    system("chcp 1251");
     int wholepart = 0, ch = numerator, zn = denominator;
-    if (ch < zn) cout << "ƒбровь не может иметь целочисленные значени€!";
+    if (ch < zn) cout << "ƒробь не может иметь целочисленные значени€!";
     while (ch > zn) {
         ch -= zn;
         wholepart++;

@@ -3,6 +3,9 @@
 #include "kommivoyazhor.h"
 
 using namespace std;
+
+
+
 int main() {
     setlocale(LC_ALL, "ru");
 
@@ -12,19 +15,34 @@ int main() {
 
     int** matrix = new int* [gauge];//матрица стоимости путей
 
-    Create_Matrix_of_cities(matrix, gauge, 9, 1);
+    CreateMatrixCities(matrix, gauge, 9, 1);//пусть цены варируются от 1 до 9
     cout << endl << "Вывод нашей матрицы путей: " << endl;
     Print(matrix, gauge);
 
-    int entry_city;//начальный город
-    cout << "Введите начальный город: ";
-    cin >> entry_city;
-    while (entry_city < 1 || entry_city > gauge) {
-        cout << "Введите еще раз начальный город: ";
-        cin >> entry_city;
+    int entry_city = CreateEntryCity(gauge);//начальный город
+
+    //схемы путей
+
+    int amount_of_path = Factorial(gauge - 1);
+    int** path = CreatePathMatrix(gauge, entry_city, amount_of_path);
+
+
+  
+
+    
+    
+    
+    
+
+
+
+
+
+    cout << endl << "Вывод матрицы путей: " << endl;
+    for (int i = 0; i < amount_of_path; i++) {
+        for (int j = 0; j < gauge + 1; j++) {
+            cout << path[i][j] << " ";
+        }cout << endl;
     }
-
-    int* Path = new int[gauge + 1];//схема пути
-
 
 }

@@ -1,11 +1,14 @@
 #pragma once
 #pragma once
 
-void Create_Matrix_of_cities(int** matrix, const int gauge, const int max_number, const int min_number);
-void Delete_Matrix_of_cities(int** matrix, const int gauge);
+void CreateMatrixCities(int** matrix, const int gauge, const int max_number, const int min_number);
+void DeleteMatrixCities(int** matrix, const int gauge);
 
 void Print(int** matrix, const int gauge);
+int CreateEntryCity(int gauge);
 
-void Create_Path(int* Path, int gauge, int entry_city);
+int** CreatePathMatrix(int gauge, int entry_city, int amount_of_path);
+void AlgorithmDijkstra(int* P, int n);
+int Factorial(int n);
 
-int MinFare(int** matrix, int* Path, int gauge, int entry_city);
+

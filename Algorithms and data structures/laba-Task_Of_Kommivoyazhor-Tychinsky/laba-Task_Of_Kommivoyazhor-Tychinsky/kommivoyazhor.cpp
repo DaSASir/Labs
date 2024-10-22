@@ -144,3 +144,79 @@ int MinimumPathWeight(int** matrix, int** path, const int gauge, int& index) {
 	return min_path;
 }
 
+//эвристика
+int* HeuristicAlgorithm(int gauge, int** matrix, int& min_path, int entry_city) {
+	min_path = 0;//минимальный вес пути
+
+	int* sum_elements = new int[gauge];//массив весов
+	int** path = new int* [gauge];//матрица путей 
+
+	for (int i = 0; i < gauge; i++) {
+
+		path[i] = new int[2];//создаем путь от городов
+
+		int min_number = -1;//минимальное число в строке
+		int col_of_element = 0;//максимальная строка
+		int row_of_element = -1;//столбец минимального числа в максимальной строке
+
+		for (int k = 0; k < gauge; k++) {// складываем пути
+			sum_elements[k] = 0;
+			for (int j = 0; j < gauge; j++)
+				sum_elements[k] += matrix[k][j];
+		}
+			
+		int max_sum = sum_elements[0];
+		for (int j = 1; j < gauge; j++) {//находим максимальный путь
+			if (sum_elements[j] > max_sum) {
+				max_sum = sum_elements[j];
+				col_of_element = j;//находим самую тяжелую строку
+			}
+		}
+
+		for (int j = 0; j < gauge; j++)
+			if ((min_number > matrix[col_of_element][j] || min_number == -1) && matrix[col_of_element][j] != 0) {
+				min_number = matrix[col_of_element][j];//вводим минимальный элемент 
+				row_of_element = j;//находим столбец минимального значения
+			}
+
+		min_path += min_number;//считаем минимальный путь
+
+		for (int j = 0; j < gauge; j++) {//обнуляем строку и столбец
+			matrix[col_of_element][j] = 0;
+			matrix[j][row_of_element] = 0;
+		}
+		
+		path[i][0] = col_of_element + 1;//вводим в матрицу путей 
+		path[i][1] = row_of_element + 1;
+	}
+
+	cout << endl;
+	for (int i = 0; i < gauge; i++) {
+		for (int j = 0; j < 2; j++) {
+			cout << path[i][j] << " ";
+		}cout << endl;
+	}
+		
+
+	int* path_e = ConstructorHeuristicPath(path, entry_city, gauge);
+	
+	delete[] sum_elements;
+	return path_e;
+}
+
+int* ConstructorHeuristicPath(int** path, int entry_city, int gauge) {
+	int* e_path = new int[gauge + 1];
+
+	e_path[0] = entry_city;
+	for (int i = 0; i < gauge; i++) {
+		for (int j = 0; j < gauge; j++) {
+			if (path[j][0] == e_path[i]) {
+				e_path[i + 1] = path[i][1];
+				break;
+			}
+		}
+	}
+		
+
+	return e_path;
+}

@@ -43,6 +43,21 @@ int main() {
 
     cout << endl << "Время нахождения минимального пути с количеством городов = " << gauge << ": " << time_work << "s" << endl;
 
+    //Эвристический метод
+    int min_path_e;
+    int* path_e = HeuristicAlgorithm(gauge, matrix, min_path_e, entry_city);
+
+    cout << endl << "Эврестический способ решения: " << endl;
+    cout << endl << "Путь с минимальной стоимостью: ";
+    for (int i = 0; i <= gauge; i++)
+        cout << path_e[i] << " ";
+       
+    cout << endl << "Минимальная стоимость пути: " << min_path_e << endl;
+
+
+
+
+
     DeleteMatrix(matrix, gauge);
     DeleteMatrix(path, Factorial(gauge - 1));
 }

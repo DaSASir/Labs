@@ -19,3 +19,6 @@ void PrintPath(int** path, const int gauge);
 //нахождение минимального пути
 int MinimumPathWeight(int** matrix, int** path,const int gauge, int& index);
 
+//эвристика
+int* HeuristicAlgorithm(int gauge, int** matrix, int& min_path, int entry_city);
+int* ConstructorHeuristicPath(int** path, int entry_city, int gauge);

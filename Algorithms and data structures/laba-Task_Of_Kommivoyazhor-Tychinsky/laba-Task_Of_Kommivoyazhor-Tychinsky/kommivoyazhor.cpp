@@ -40,33 +40,32 @@ int CreateEntryCity(int gauge) {
 }
 
 //функции для путей
-int** CreatePathMatrix(int gauge, int entry_city, int amount_of_path) {
+int** CreatePathMatrix(int gauge, int entry_city) {
+	int amount_of_path = Factorial(gauge - 1);
 	int** path = new int* [amount_of_path];
 	for (int i = 0; i < amount_of_path; i++)
 		path[i] = new int[gauge + 1];
 
-	
-	for (int i = 0; i < amount_of_path; i++) {
-		int cheese = 1;
-		for (int j = 0; j < gauge + 1; j++) {
-			if (j == 0 || j == gauge)
-				path[i][j] = entry_city;
+	int cheese = 1;
+	for (int i = 0; i < gauge + 1; i++) {
+		if (i == 0 || i == gauge)
+			path[0][i] = entry_city;
+		else {
+			if (cheese != entry_city && cheese <= gauge) {
+				path[0][i] = cheese;
+				cheese++;
+			}
 			else {
-				if (cheese != entry_city && cheese <= gauge) {
-					path[i][j] = cheese;
-					cheese++;
-				}
-				else {
-					cheese++;
-					path[i][j] = cheese;
-					cheese++;
-				}
+				cheese++;
+				path[0][i] = cheese;
+				cheese++;
 			}
 		}
 	}
+	
 
 	for (int i = 1; i < amount_of_path; i++) {
-		for (int j = 1; j < gauge; j++)
+		for (int j = 0; j <= gauge; j++)
 			path[i][j] = path[i - 1][j];
 
 		AlgorithmDijkstra(path[i], gauge);

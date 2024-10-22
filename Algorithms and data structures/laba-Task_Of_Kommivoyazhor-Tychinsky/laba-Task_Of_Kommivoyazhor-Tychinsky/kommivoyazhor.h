@@ -7,7 +7,7 @@ void DeleteMatrixCities(int** matrix, const int gauge);
 void Print(int** matrix, const int gauge);
 int CreateEntryCity(int gauge);
 
-int** CreatePathMatrix(int gauge, int entry_city, int amount_of_path);
+int** CreatePathMatrix(int gauge, int entry_city);
 void AlgorithmDijkstra(int* P, int n);
 int Factorial(int n);
 

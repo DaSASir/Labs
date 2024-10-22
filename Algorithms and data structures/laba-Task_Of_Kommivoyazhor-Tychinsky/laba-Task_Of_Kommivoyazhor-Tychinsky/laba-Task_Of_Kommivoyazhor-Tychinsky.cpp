@@ -11,6 +11,10 @@ int main() {
     cout << "Введите кол-во городов: ";
     cin >> gauge;
 
+    clock_t start_time, stop_time;//начинаем считать время
+    start_time = clock();
+
+
     int** matrix = CreateMatrixCities(gauge, 9, 1);//создание матрицы стоимости
 
     cout << endl << "Вывод нашей матрицы путей: " << endl;
@@ -20,11 +24,25 @@ int main() {
 
     int** path = CreatePathMatrix(gauge, entry_city);//все возможные пути
     
+    /*
     cout << endl << "Вывод матрицы путей: " << endl;
     PrintPath(path, gauge);
+    */
 
-    int min_path = MinimumPathWeight(matrix, path, gauge);
-    cout << endl <<  "Минимальная стоимость пути: " << min_path;
+    int index_min_path;
+    int min_path = MinimumPathWeight(matrix, path, gauge, index_min_path);//нахождение минимальной стоимости и пути
+    cout << endl << "Минимальная стоимость пути: " << min_path << endl;
+
+    cout << "Путь с минимальной стоимостью: ";
+    for (int i = 0; i < gauge + 1; i++)
+        cout << path[index_min_path][i] << " ";
     cout << endl;
 
+    stop_time = clock();//заканчиваем считать время
+    double time_work = (double)(stop_time - start_time) / CLOCKS_PER_SEC;
+
+    cout << endl << "Время нахождения минимального пути с количеством городов = " << gauge << ": " << time_work << "s" << endl;
+
+    DeleteMatrix(matrix, gauge);
+    DeleteMatrix(path, Factorial(gauge - 1));
 }

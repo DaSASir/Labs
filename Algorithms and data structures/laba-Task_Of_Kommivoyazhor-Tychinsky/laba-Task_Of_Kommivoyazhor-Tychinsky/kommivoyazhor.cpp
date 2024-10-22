@@ -127,7 +127,7 @@ void PrintPath(int** path, const int gauge) {
 
 
 //вычисление минимального пути
-int MinimumPathWeight(int** matrix, int** path, const int gauge) {
+int MinimumPathWeight(int** matrix, int** path, const int gauge, int& index) {
 	int min_path = -1;
 
 	for (int i = 0; i < Factorial(gauge - 1); i++) {
@@ -136,8 +136,10 @@ int MinimumPathWeight(int** matrix, int** path, const int gauge) {
 		for (int j = 0; j < gauge; j++) 
 			this_path += matrix[path[i][j] - 1][path[i][j + 1] - 1];
 		
-		if (min_path > this_path || min_path == -1)
+		if (min_path > this_path || min_path == -1) {
 			min_path = this_path;
+			index = i;
+		}
 	}
 	return min_path;
 }

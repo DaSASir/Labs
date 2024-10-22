@@ -17,5 +17,5 @@ int Factorial(int n);
 void PrintPath(int** path, const int gauge);
 
 //нахождение минимального пути
-int MinimumPathWeight(int** matrix, int** path,const int gauge);
+int MinimumPathWeight(int** matrix, int** path,const int gauge, int& index);
 

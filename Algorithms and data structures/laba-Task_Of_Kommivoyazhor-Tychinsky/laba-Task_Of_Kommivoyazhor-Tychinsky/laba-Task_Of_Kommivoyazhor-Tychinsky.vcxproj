@@ -129,6 +129,7 @@
   <ItemGroup>
     <ClCompile Include="kommivoyazhor.cpp" />
     <ClCompile Include="laba-Task_Of_Kommivoyazhor-Tychinsky.cpp" />
+    <ClCompile Include="Report.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Header.h" />

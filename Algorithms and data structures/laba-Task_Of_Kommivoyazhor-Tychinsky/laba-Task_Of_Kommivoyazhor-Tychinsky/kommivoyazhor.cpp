@@ -4,10 +4,12 @@
 
 using namespace std;
 
-void CreateMatrixCities(int** matrix, const int gauge, const int max_number, const int min_number) {
-	srand((unsigned int)time(0));
+int** CreateMatrixCities(const int gauge, const int max_number, const int min_number) {
+	int** matrix = new int* [gauge];
 	for (int i = 0; i < gauge; i++)
 		matrix[i] = new int[gauge];
+
+	srand((unsigned int)time(0));
 
 	for (int i = 0; i < gauge; i++)
 		for (int j = 0; j < gauge; j++) {
@@ -16,8 +18,9 @@ void CreateMatrixCities(int** matrix, const int gauge, const int max_number, con
 			else
 				matrix[i][j] = rand() % (max_number - min_number + 1) + min_number;
 		}
+	return matrix;
 }
-void DeleteMatrixCities(int** matrix, const int gauge) {
+void DeleteMatrix(int** matrix, const int gauge) {
 	for (int i = 0; i < gauge; i++)
 		delete[] matrix[i];
 	delete[]matrix;
@@ -42,6 +45,7 @@ int CreateEntryCity(int gauge) {
 //функции для путей
 int** CreatePathMatrix(int gauge, int entry_city) {
 	int amount_of_path = Factorial(gauge - 1);
+
 	int** path = new int* [amount_of_path];
 	for (int i = 0; i < amount_of_path; i++)
 		path[i] = new int[gauge + 1];
@@ -63,7 +67,6 @@ int** CreatePathMatrix(int gauge, int entry_city) {
 		}
 	}
 	
-
 	for (int i = 1; i < amount_of_path; i++) {
 		for (int j = 0; j <= gauge; j++)
 			path[i][j] = path[i - 1][j];
@@ -113,3 +116,29 @@ int Factorial(int n) {
 		return 1;
 	return n * Factorial(n - 1);
 }
+
+void PrintPath(int** path, const int gauge) {
+	for (int i = 0; i < Factorial(gauge-1); i++) {
+		for (int j = 0; j <= gauge; j++)
+			cout << path[i][j] << " ";
+		cout << endl;
+	}
+}
+
+
+//вычисление минимального пути
+int MinimumPathWeight(int** matrix, int** path, const int gauge) {
+	int min_path = -1;
+
+	for (int i = 0; i < Factorial(gauge - 1); i++) {
+		int this_path = 0;
+
+		for (int j = 0; j < gauge; j++) 
+			this_path += matrix[path[i][j] - 1][path[i][j + 1] - 1];
+		
+		if (min_path > this_path || min_path == -1)
+			min_path = this_path;
+	}
+	return min_path;
+}
+

@@ -11,34 +11,20 @@ int main() {
     cout << "Введите кол-во городов: ";
     cin >> gauge;
 
-    int** matrix = new int* [gauge];//матрица стоимости путей
+    int** matrix = CreateMatrixCities(gauge, 9, 1);//создание матрицы стоимости
 
-    CreateMatrixCities(matrix, gauge, 9, 1);//пусть цены варьируются от 1 до 9
     cout << endl << "Вывод нашей матрицы путей: " << endl;
     Print(matrix, gauge);
 
     int entry_city = CreateEntryCity(gauge);//начальный город
 
-    //схемы путей
-    int** path = CreatePathMatrix(gauge, entry_city);
-
-
-  
-
+    int** path = CreatePathMatrix(gauge, entry_city);//все возможные пути
     
-    
-    
-    
-
-
-
-
-
     cout << endl << "Вывод матрицы путей: " << endl;
-    for (int i = 0; i < Factorial(gauge - 1); i++) {
-        for (int j = 0; j < gauge + 1; j++) {
-            cout << path[i][j] << " ";
-        }cout << endl;
-    }
+    PrintPath(path, gauge);
+
+    int min_path = MinimumPathWeight(matrix, path, gauge);
+    cout << endl <<  "Минимальная стоимость пути: " << min_path;
+    cout << endl;
 
 }

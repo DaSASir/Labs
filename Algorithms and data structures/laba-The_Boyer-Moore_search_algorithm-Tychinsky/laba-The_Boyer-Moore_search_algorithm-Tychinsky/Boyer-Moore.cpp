@@ -1,6 +1,5 @@
 #include <iostream>
 #include <string>
-#include <string.h>
 #include <vector>
 #include "Boyer-Moore.h"
 
@@ -55,3 +54,37 @@ int* CreateMassiveOfNumbersSubstring(const string substring) {
 }
 
 //#2
+std::vector<int> SearchAllOccurrences(const string main_string, const string substring) {
+	std::vector<int> cheese;
+
+	int i = 0;
+	while (i <= main_string.length() - substring.length()) {
+		int entry_index = BoyerMooreSearch(main_string.substr(i), substring);
+
+		cheese.push_back(entry_index + i);
+
+		i += entry_index + 1;
+	}
+
+	return cheese;
+}
+
+//#3
+std::vector<int> SearchAllOccurrencesInRange(const string main_string, const string substring, const int beginning, const int end) {
+	std::vector<int> cheese;
+
+	if (beginning < 0 || beginning > main_string.length() - substring.length())
+		return cheese;
+
+	int i = beginning;
+	while (i <= end - substring.length()) {
+		int entry_index = BoyerMooreSearch(main_string.substr(i), substring);
+
+		if(entry_index + i < end)
+			cheese.push_back(entry_index + i);
+
+		i += entry_index + 1;
+	}
+
+	return cheese;
+}

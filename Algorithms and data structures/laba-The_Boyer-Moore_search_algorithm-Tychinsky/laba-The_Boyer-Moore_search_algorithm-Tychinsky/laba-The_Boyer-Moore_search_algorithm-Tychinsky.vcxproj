@@ -127,7 +127,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Boyer-Moore.cpp" />
     <ClCompile Include="laba-The_Boyer-Moore_search_algorithm-Tychinsky.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Boyer-Moore.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

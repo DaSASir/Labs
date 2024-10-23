@@ -145,18 +145,19 @@ int MinimumPathWeight(int** matrix, int** path, const int gauge, int& index) {
 }
 
 //эвристика
+/*
 int* HeuristicAlgorithm(int gauge, int** matrix, int& min_path, int entry_city) {
 	min_path = 0;//минимальный вес пути
 
 	int* sum_elements = new int[gauge];//массив весов
 	int** path = new int* [gauge];//матрица путей 
 
-	for (int i = 0; i < gauge; i++) {
+	for (int i = 0; i < gauge; i++) {//шаги решения
 
-		path[i] = new int[2];//создаем путь от городов
+		path[i] = new int[2];//создаем путь от города1 к городу2
 
 		int min_number = -1;//минимальное число в строке
-		int col_of_element = 0;//максимальная строка
+		int col_of_element = -1;//максимальная строка
 		int row_of_element = -1;//столбец минимального числа в максимальной строке
 
 		for (int k = 0; k < gauge; k++) {// складываем пути
@@ -166,6 +167,7 @@ int* HeuristicAlgorithm(int gauge, int** matrix, int& min_path, int entry_city) 
 		}
 			
 		int max_sum = sum_elements[0];
+		col_of_element = 0;
 		for (int j = 1; j < gauge; j++) {//находим максимальный путь
 			if (sum_elements[j] > max_sum) {
 				max_sum = sum_elements[j];
@@ -189,25 +191,53 @@ int* HeuristicAlgorithm(int gauge, int** matrix, int& min_path, int entry_city) 
 		path[i][0] = col_of_element + 1;//вводим в матрицу путей 
 		path[i][1] = row_of_element + 1;
 	}
-
-	cout << endl;
-	for (int i = 0; i < gauge; i++) {
-		for (int j = 0; j < 2; j++) {
-			cout << path[i][j] << " ";
-		}cout << endl;
-	}
-		
-
-	int* path_e = ConstructorHeuristicPath(path, entry_city, gauge);
 	
 	delete[] sum_elements;
-	return path_e;
+	return ConstructorHeuristicPath(path, entry_city, gauge);
 }
+*/
+int* HeuristicAlgorithm1(int gauge, int** matrix, int& min_path, int entry_city) {
+	/*Идея: Выбираем исходящую дугу минимальной стоимости из текущей вершины*/
+	int** path_e = new int*[gauge];
 
+	min_path = 0;
+
+	int index_col = entry_city - 1;
+	int index_row = -1;
+
+	for (int step = 0; step < gauge; step++) {
+		path_e[step] = new int[2];
+
+		int min_element = -1;
+		for (int i = 0; i < gauge; i++) {
+			if (i == entry_city - 1 && step != gauge - 1) i++;
+			if ((matrix[index_col][i] < min_element || min_element == -1) && matrix[index_col][i] != 0) {
+				min_element = matrix[index_col][i];
+				index_row = i;
+			}
+		}
+
+		for (int j = 0; j < gauge; j++) {//обнуляем строку и столбец
+			matrix[index_col][j] = 0;
+			matrix[j][index_row] = 0;
+		}
+
+		path_e[step][0] = index_col + 1;
+		path_e[step][1] = index_row + 1;
+
+		min_path += min_element;
+
+		index_col = index_row;
+
+	}
+
+	return ConstructorHeuristicPath(path_e, entry_city, gauge);
+}
 int* ConstructorHeuristicPath(int** path, int entry_city, int gauge) {
 	int* e_path = new int[gauge + 1];
 
 	e_path[0] = entry_city;
+
 	for (int i = 0; i < gauge; i++) {
 		for (int j = 0; j < gauge; j++) {
 			if (path[j][0] == e_path[i]) {
@@ -217,6 +247,5 @@ int* ConstructorHeuristicPath(int** path, int entry_city, int gauge) {
 		}
 	}
 		
-
 	return e_path;
 }

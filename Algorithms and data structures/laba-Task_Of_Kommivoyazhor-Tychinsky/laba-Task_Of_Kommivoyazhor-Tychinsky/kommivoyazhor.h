@@ -21,4 +21,5 @@ int MinimumPathWeight(int** matrix, int** path,const int gauge, int& index);
 
 //эвристика
 int* HeuristicAlgorithm(int gauge, int** matrix, int& min_path, int entry_city);
+int* HeuristicAlgorithm1(int gauge, int** matrix, int& min_path, int entry_city);
 int* ConstructorHeuristicPath(int** path, int entry_city, int gauge);

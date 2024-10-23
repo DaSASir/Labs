@@ -7,12 +7,12 @@ void DeleteMatrix(int** matrix, const int gauge);
 void Print(int** matrix, const int gauge);
 
 //матрица путей
-int CreateEntryCity(int gauge);
+int CreateEntryCity(const int gauge);
 
-int** CreatePathMatrix(int gauge, int entry_city);
-void AlgorithmDijkstra(int* P, int n);
+int** CreatePathMatrix(const int gauge, const int entry_city);
+void AlgorithmDijkstra(int* P, const int n);
 
-int Factorial(int n);
+int Factorial(const int n);
 
 void PrintPath(int** path, const int gauge);
 
@@ -20,6 +20,6 @@ void PrintPath(int** path, const int gauge);
 int MinimumPathWeight(int** matrix, int** path,const int gauge, int& index);
 
 //эвристика
-int* HeuristicAlgorithm(int gauge, int** matrix, int& min_path, int entry_city);
-int* HeuristicAlgorithm1(int gauge, int** matrix, int& min_path, int entry_city);
-int* ConstructorHeuristicPath(int** path, int entry_city, int gauge);
+//int* HeuristicAlgorithm(const int gauge, int** matrix, int& min_path, int entry_city);
+int* HeuristicAlgorithm1(const int gauge, int** matrix, int& min_path, const int entry_city);
+int* ConstructorHeuristicPath(int** path, const int entry_city, const int gauge);

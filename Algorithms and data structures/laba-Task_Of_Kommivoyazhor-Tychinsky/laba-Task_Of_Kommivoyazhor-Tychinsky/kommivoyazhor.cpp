@@ -32,7 +32,7 @@ void Print(int** matrix, const int gauge) {
 		cout << endl;
 	}
 }
-int CreateEntryCity(int gauge) {
+int CreateEntryCity(const int gauge) {
 	int entry_city;
 	cout << endl << "Введите начальный город: ";
 	cin >> entry_city;
@@ -43,7 +43,7 @@ int CreateEntryCity(int gauge) {
 }
 
 //функции для путей
-int** CreatePathMatrix(int gauge, int entry_city) {
+int** CreatePathMatrix(const int gauge, const int entry_city) {
 	int amount_of_path = Factorial(gauge - 1);
 
 	int** path = new int* [amount_of_path];
@@ -77,7 +77,7 @@ int** CreatePathMatrix(int gauge, int entry_city) {
 	return path;
 }
 
-void AlgorithmDijkstra(int* P, int n) {
+void AlgorithmDijkstra(int* P, const int n) {
 	/*1. Находим максимальное значение i такое, что
 	0 < i < n и P[i] < P[i+1]. Если такого i не
 	существует, то процесс завершен – следующей
@@ -111,7 +111,7 @@ void AlgorithmDijkstra(int* P, int n) {
 		swap(P[a], P[b]);
 }
 
-int Factorial(int n) {
+int Factorial(const int n) {
 	if (n == 1)
 		return 1;
 	return n * Factorial(n - 1);
@@ -196,7 +196,7 @@ int* HeuristicAlgorithm(int gauge, int** matrix, int& min_path, int entry_city) 
 	return ConstructorHeuristicPath(path, entry_city, gauge);
 }
 */
-int* HeuristicAlgorithm1(int gauge, int** matrix, int& min_path, int entry_city) {
+int* HeuristicAlgorithm1(const int gauge, int** matrix, int& min_path, const int entry_city) {
 	/*Идея: Выбираем исходящую дугу минимальной стоимости из текущей вершины*/
 	int** path_e = new int*[gauge];//матрица переходов
 
@@ -236,7 +236,7 @@ int* HeuristicAlgorithm1(int gauge, int** matrix, int& min_path, int entry_city)
 
 	return ConstructorHeuristicPath(path_e, entry_city, gauge);
 }
-int* ConstructorHeuristicPath(int** path, int entry_city, int gauge) {
+int* ConstructorHeuristicPath(int** path, const int entry_city, const int gauge) {
 	int* e_path = new int[gauge + 1];
 
 	e_path[0] = entry_city;

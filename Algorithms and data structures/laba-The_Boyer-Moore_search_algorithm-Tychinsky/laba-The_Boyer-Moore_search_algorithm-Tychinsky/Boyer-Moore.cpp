@@ -61,9 +61,11 @@ int* CreateMassiveOfNumbersSubstring(const string substring, char* substring_c) 
 }
 
 char* CharCreator(string str) {
-	char* ARRA = new char[str.length() + 1];
-	for (int i = 0; i < str.length(); i++) ARRA[i] = str[i];
-	ARRA[str.length()] = '\0';
-	return ARRA;
-	delete[] ARRA;
+	char* cheese = new char[str.length() + 1];
+	for (int i = 0; i < str.length(); i++) cheese[i] = str[i];
+	cheese[str.length()] = '\0';
+	return cheese;
+	delete[] cheese;
 }
+
+//#2

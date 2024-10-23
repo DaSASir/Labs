@@ -6,3 +6,5 @@ using namespace std;
 int BoyerMooreSearch(const string main_string, const string substring);
 int* CreateMassiveOfNumbersSubstring(const string substring, char* substring_c);
 char* CharCreator(const string str);
+
+//#2

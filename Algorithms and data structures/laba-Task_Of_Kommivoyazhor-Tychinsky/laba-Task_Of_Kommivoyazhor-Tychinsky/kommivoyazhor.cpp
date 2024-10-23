@@ -198,22 +198,25 @@ int* HeuristicAlgorithm(int gauge, int** matrix, int& min_path, int entry_city) 
 */
 int* HeuristicAlgorithm1(int gauge, int** matrix, int& min_path, int entry_city) {
 	/*Идея: Выбираем исходящую дугу минимальной стоимости из текущей вершины*/
-	int** path_e = new int*[gauge];
+	int** path_e = new int*[gauge];//матрица переходов
 
-	min_path = 0;
+	min_path = 0;//счетчик веса пути
 
-	int index_col = entry_city - 1;
-	int index_row = -1;
+	int index_col = entry_city - 1;//строка поиска элемента
+	
+	for (int step = 0; step < gauge; step++) {//шаги решения
+		path_e[step] = new int[2];//создаем переход от города 1 к городу 2
 
-	for (int step = 0; step < gauge; step++) {
-		path_e[step] = new int[2];
+		int index_row = -1;//столбец элемента
 
-		int min_element = -1;
+		int min_element = -1; //создаем минимальный элемент
 		for (int i = 0; i < gauge; i++) {
-			if (i == entry_city - 1 && step != gauge - 1) i++;
+
+			if (i == entry_city - 1 && step != gauge - 1) i++; //если индекс минимального значения примет наш начальный город, но матрица еще не обнулена
+
 			if ((matrix[index_col][i] < min_element || min_element == -1) && matrix[index_col][i] != 0) {
-				min_element = matrix[index_col][i];
-				index_row = i;
+				min_element = matrix[index_col][i];//нахождение элемента 
+				index_row = i;//нахождение столбца элемента
 			}
 		}
 
@@ -222,12 +225,12 @@ int* HeuristicAlgorithm1(int gauge, int** matrix, int& min_path, int entry_city)
 			matrix[j][index_row] = 0;
 		}
 
-		path_e[step][0] = index_col + 1;
+		path_e[step][0] = index_col + 1;//вносим значения в матрицу 
 		path_e[step][1] = index_row + 1;
 
-		min_path += min_element;
+		min_path += min_element;//вес нашего пути
 
-		index_col = index_row;
+		index_col = index_row;//следующий начальный город = нашему последнему 
 
 	}
 
@@ -247,5 +250,7 @@ int* ConstructorHeuristicPath(int** path, int entry_city, int gauge) {
 		}
 	}
 		
+	DeleteMatrix(path, gauge);
+
 	return e_path;
 }

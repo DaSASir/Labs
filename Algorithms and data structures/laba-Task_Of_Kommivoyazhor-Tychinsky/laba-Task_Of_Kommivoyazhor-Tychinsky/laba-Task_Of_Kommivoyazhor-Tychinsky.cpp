@@ -2,14 +2,12 @@
 #include <time.h>
 #include "kommivoyazhor.h"
 
-using namespace std;
-
 int main() {
     setlocale(LC_ALL, "ru");
 
     int gauge;//кол-во городов
-    cout << "Введите кол-во городов: ";
-    cin >> gauge;
+    std::cout << "Введите кол-во городов: ";
+    std::cin >> gauge;
 
     clock_t start_time, stop_time;//начинаем считать время
     start_time = clock();
@@ -17,31 +15,24 @@ int main() {
 
     int** matrix = CreateMatrixCities(gauge, 9, 1);//создание матрицы стоимости
 
-    cout << endl << "Вывод нашей матрицы путей: " << endl;
+    std::cout << std::endl << "Вывод нашей матрицы путей: " << std::endl;
     Print(matrix, gauge);
 
     int entry_city = CreateEntryCity(gauge);//начальный город
 
-    int** path = CreatePathMatrix(gauge, entry_city);//все возможные пути
-    
-    /*
-    cout << endl << "Вывод матрицы путей: " << endl;
-    PrintPath(path, gauge);
-    */
+    int min_weight = 0;
+    int* min_path = FindMinimumPathWeight(matrix, gauge, entry_city, min_weight);
+    std::cout << std::endl << "Минимальная стоимость пути: " << min_weight << std::endl;
 
-    int index_min_path;
-    int min_path = MinimumPathWeight(matrix, path, gauge, index_min_path);//нахождение минимальной стоимости и пути
-    cout << endl << "Минимальная стоимость пути: " << min_path << endl;
-
-    cout << "Путь с минимальной стоимостью: ";
+    std::cout << "Путь с минимальной стоимостью: ";
     for (int i = 0; i < gauge + 1; i++)
-        cout << path[index_min_path][i] << " ";
-    cout << endl;
+        std::cout << min_path[i] << " ";
+    std::cout << std::endl;
 
     stop_time = clock();//заканчиваем считать время
     double time_work = (double)(stop_time - start_time) / CLOCKS_PER_SEC;
 
-    cout << endl << "Время нахождения минимального пути с количеством городов = " << gauge << ": " << time_work << "s" << endl;
+    std::cout << std::endl << "Время нахождения минимального пути с количеством городов = " << gauge << ": " << time_work << "s" << std::endl;
 
     //Эвристический метод
     clock_t start_time_e, stop_time_e;//начинаем считать время
@@ -50,20 +41,19 @@ int main() {
     int min_path_e;
     int* path_e = HeuristicAlgorithm1(gauge, matrix, min_path_e, entry_city);
 
-    cout << endl << "Эвристический способ решения: " << endl;
-    cout << endl << "Путь с минимальной стоимостью: ";
+    std::cout << std::endl << "Эвристический способ решения: " << std::endl;
+    std::cout << std::endl << "Путь с минимальной стоимостью: ";
     for (int i = 0; i <= gauge; i++)
-        cout << path_e[i] << " ";
+        std::cout << path_e[i] << " ";
        
-    cout << endl << "Минимальная стоимость пути: " << min_path_e << endl;
+    std::cout << std::endl << "Минимальная стоимость пути: " << min_path_e << std::endl;
 
     stop_time_e = clock();//заканчиваем считать время
     double time_work_e = (double)(stop_time_e - start_time_e) / CLOCKS_PER_SEC;
 
-    cout << endl << "Время нахождения минимального пути эвристическим методом: " << time_work_e << "s" << endl;
+    std::cout << std::endl << "Время нахождения минимального пути эвристическим методом: " << time_work_e << "s" << std::endl;
 
 
-    delete[] path_e;
+    delete[] path_e, min_path;
     DeleteMatrix(matrix, gauge);
-    DeleteMatrix(path, Factorial(gauge - 1));
 }

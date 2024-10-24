@@ -2,7 +2,6 @@
 #include <fstream>
 #include <time.h>
 #include "Shell.h"
-#define _CRT_SECURITYCRITICAL_ATTRIBUTE
 
 int main() {
     setlocale(LC_ALL, "ru");

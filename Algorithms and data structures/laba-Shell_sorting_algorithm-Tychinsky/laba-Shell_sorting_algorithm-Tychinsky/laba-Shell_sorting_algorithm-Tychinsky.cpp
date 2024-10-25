@@ -14,7 +14,8 @@ int main() {
     PrintArray(array_of_int, 9);
 
     std::cout << std::endl << std::endl;
-    TheInitialSequence(array_of_int, 9);
+    SequenceWithLogarithms(array_of_int, 9);
+
     if (!IsOrderly(array_of_int, 9))
         std::cout << "Массив не упорядочен!!!" << std::endl;
     else {
@@ -24,15 +25,50 @@ int main() {
     }
     
     //2. [10 баллов] Дополнительно:
+    std::cout << "\nВторой этап: \n";
     int** diff_array = CreateDiffArrays();
 
-    std::vector<double> average_time = CreateAverageTime(diff_array);
-    
-    std::cout << "Среднее время алгоритмов: \n";
-    for(int i = 0; i < average_time.size(); i ++)
-        std::cout << average_time[i] << "\n";
+    std::vector<double> average_time;
 
-    for (int i = 0; i < 9; i++)
-        delete[] diff_array[i];
-    delete[]array_of_int, diff_array;
+    int size[] = { 10000 ,10000 ,10000 ,
+                   100000 ,100000 ,100000 ,
+                   1000000 ,1000000 ,1000000 };
+
+    for (int j = 0; j < 9; j++) {
+        time_t start = clock();
+
+        SequenceWithLogarithms(diff_array[j], size[j]);
+        //TheInitialSequence(copy[j], size[j]);
+        //SequenceWithLogarithms(copy[j], size[j]);
+        //TheWhipSequence(copy[j], size[j]);
+        //TheSedgwickSequence(copy[j], size[j]);
+
+        time_t stop = clock();
+        double time = (double)(stop - start) / CLOCKS_PER_SEC;
+
+        if (!IsOrderly(diff_array[j], size[j]))
+            std::cout << "Массив не упорядочен!!!" << j << std::endl;
+        else 
+            average_time.push_back(time);
+    }
+
+    std::cout << "Вывод времени каждого массива:";
+    for (int i = 0; i < average_time.size(); i++) {
+        if (i % 3 == 0) 
+            std::cout << "\n";
+
+        std::cout << average_time[i] << "s ";
+        
+    }
+
+    std::cout << "\nВывод среднего времени:\n";
+
+    average_time.push_back(0.0);
+    for (int i = 0; i < average_time.size() - 1; i++) 
+        average_time[average_time.size() - 1] += average_time[i];
+        
+    
+    std::cout << average_time[average_time.size() - 1] / (average_time.size() - 1) << "s\n";
+    
+
 }

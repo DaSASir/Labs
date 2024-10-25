@@ -7,7 +7,7 @@ void ShellAlgorithm(int t, int* h, int* a, int n);
 
 void PrintArray(int mas_cheese[], const int n);
 
-bool IsOrderly(int* mas_cheese, const int n);
+bool IsOrderly(int* mas_cheese,  int n);
 
 //#2
 int** CreateDiffArrays();
@@ -18,6 +18,3 @@ void DeleteMatrix(int** a, const int n);
 void SequenceWithLogarithms(int* a, const int n);
 void TheWhipSequence(int* a, const int n);
 void TheSedgwickSequence(int* a, const int n);
-
-//нахождение среднего времени
-std::vector<double> CreateAverageTime(int** diff_array);

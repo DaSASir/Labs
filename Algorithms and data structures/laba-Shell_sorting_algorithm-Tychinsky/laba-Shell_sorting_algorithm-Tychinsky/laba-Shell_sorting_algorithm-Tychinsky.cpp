@@ -1,6 +1,8 @@
 ﻿#include <iostream>
 #include <fstream>
 #include <time.h>
+#include <cmath>
+#include <vector>
 #include "Shell.h"
 
 int main() {
@@ -12,7 +14,7 @@ int main() {
     PrintArray(array_of_int, 9);
 
     std::cout << std::endl << std::endl;
-    ShellAlgorithm(array_of_int, 9);
+    TheInitialSequence(array_of_int, 9);
     if (!IsOrderly(array_of_int, 9))
         std::cout << "Массив не упорядочен!!!" << std::endl;
     else {
@@ -22,13 +24,15 @@ int main() {
     }
     
     //2. [10 баллов] Дополнительно:
-    int** different_arrays = CreateDiffArrays();
+    int** diff_array = CreateDiffArrays();
 
-    double average_time = CreateAverageTime(different_arrays);
-    std::cout << "Среднее время работы всех алгоритмов - " << average_time;
+    std::vector<double> average_time = CreateAverageTime(diff_array);
     
+    std::cout << "Среднее время алгоритмов: \n";
+    for(int i = 0; i < average_time.size(); i ++)
+        std::cout << average_time[i] << "\n";
 
-
-    delete[]array_of_int;
-    DeleteMatrix(different_arrays, 9);
+    for (int i = 0; i < 9; i++)
+        delete[] diff_array[i];
+    delete[]array_of_int, diff_array;
 }

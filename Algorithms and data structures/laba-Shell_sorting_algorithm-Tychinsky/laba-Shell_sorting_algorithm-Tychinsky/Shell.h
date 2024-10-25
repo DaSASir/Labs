@@ -1,9 +1,11 @@
 #pragma once
 
 //#1
-void ShellAlgorithm(int* mas_cheese, const int n);
+void TheInitialSequence(int* a, const int n);
 
-void PrintArray(int* mas_cheese, const int n);
+void ShellAlgorithm(int t, int* h, int* a, int n);
+
+void PrintArray(int mas_cheese[], const int n);
 
 bool IsOrderly(int* mas_cheese, const int n);
 
@@ -12,4 +14,10 @@ int** CreateDiffArrays();
 
 void DeleteMatrix(int** a, const int n);
 
-double CreateAverageTime(int** cheese);
+//другие формулы для выбора длин шагов в алгоритме Шелла
+void SequenceWithLogarithms(int* a, const int n);
+void TheWhipSequence(int* a, const int n);
+void TheSedgwickSequence(int* a, const int n);
+
+//нахождение среднего времени
+std::vector<double> CreateAverageTime(int** diff_array);

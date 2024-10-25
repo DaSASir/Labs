@@ -1,27 +1,43 @@
 #include <iostream>
-#include <fstream>
-#include <time.h>
+#include <fstream>//файлы
+#include <time.h>//время
+#include <cmath>//для логарифмов
+#include <vector>
 #include "Shell.h"
 
 //#1
-void ShellAlgorithm(int* mas_cheese,const int n) {
-	int h = n / 2;//шаги
-	while ( h > 1 ) {
-		for (int i = h; i < n; i++) {
-			int x = mas_cheese[i];//берем сразу второй элемент
+void TheInitialSequence(int* a, const int n) {
+	int t = 0;//кол-во шагов
+	for (int i = n / 2; i > 1; i /= 2)
+		t++;
 
-			int j = i;
-			while (j >= h && mas_cheese[j - h] > x) {//проверяем второй элемент с первым
-				mas_cheese[j] = mas_cheese[j - h];
-				j -= h;
+	int* h = new int[t + 1];//массив шагов
+	for (int i = n / 2, j = 0; i >= 1 && j <= t; i /= 2, j++)
+		h[j] = i;
+
+	ShellAlgorithm(t, h, a, n);
+
+	delete[]h;
+}
+
+void ShellAlgorithm(int t, int* h, int* a, int n) {
+	for (int i = 0; i <= t; i++) {//Алгоритм Шелла
+		int s = h[i];
+		for (int b = 0; b < s; b++) {//Вставка для подпоследовательности
+			for (int j = b + s; j < n; j += s) {
+				int x = a[j];
+				int k = j - s;
+				while (k >= 0 && a[k] > x) {
+					a[k + s] = a[k];
+					k -= s;
+				}
+				a[k + s] = x;
 			}
-			mas_cheese[j] = x;
 		}
-		h /= 2;
 	}
 }
 
-void PrintArray(int* mas_cheese, const int n) {
+void PrintArray(int mas_cheese[], const int n) {
 	for (int i = 0; i < n; i++)
 		std::cout << mas_cheese[i] << " ";
 }
@@ -38,17 +54,16 @@ int** CreateDiffArrays() {
 	fopen_s(&f,"Arrays.txt", "w");
 	if (f == NULL) { perror("error opening file"); exit(-1); }
 
+	int size[] = { 10000 ,10000 ,10000 ,
+				   100000 ,100000 ,100000,
+				   1000000 ,1000000 ,1000000 };
+
 	int** cheese = new int*[9];
 	for (int i = 0; i < 9; i++) {
-		if (i >= 0 && i < 3)
-			cheese[i] = new int[10000];
-		else if (i >= 3 && i < 6)
-			cheese[i] = new int[100000];
-		else if (i >= 6 && i < 9)
-			cheese[i] = new int[1000000];
+		cheese[i] = new int[size[i]];
 
 		if (i == 0 || i == 3 || i == 6) {
-			for (int j = 0; j < 9; j++) {
+			for (int j = 0; j < size[i]; j++) {
 				cheese[i][j] = rand() % (10 - (-10) + 1) + (-10);
 				fprintf(f, "%d ", cheese[i][j]);
 			}
@@ -56,23 +71,20 @@ int** CreateDiffArrays() {
 		}
 				
 		else if (i == 1 || i == 4 || i == 7) {
-			for (int j = 0; j < 9; j++) {
+			for (int j = 0; j < size[i]; j++) {
 				cheese[i][j] = rand() % (1000 - (-1000) + 1) + (-1000);
 				fprintf(f, "%d ", cheese[i][j]);
 			}
 			fprintf(f, "\n\n");
 		}
-		
 				
 		else if (i == 2 || i == 5 || i == 8) {
-			for (int j = 0; j < 9; j++) {
+			for (int j = 0; j < size[i]; j++) {
 				cheese[i][j] = rand() % (100000 - (-100000) + 1) + (-100000);
 				fprintf(f, "%d ", cheese[i][j]);
 			}
 			fprintf(f, "\n\n");
-		}
-		
-				
+		}		
 	}
 	fclose(f);
 	return cheese;
@@ -84,24 +96,91 @@ void DeleteMatrix(int** a,const int n) {
 	delete[]a;
 }
 
-double CreateAverageTime(int** cheese) {
-	double average_time = 0;
-	for (int step = 0; step < 9; step++) {
-		clock_t start_time, stop_time;//начинаем считать время
-		start_time = clock();
+//другие формулы для выбора длин шагов в алгоритме Шелла
+void SequenceWithLogarithms(int* a, const int n) {
+	int t = (int)log2(n);//кол-во шагов
 
-		if (step >= 0 && step < 3)
-			ShellAlgorithm(cheese[step], 10000);
-		else if (step >= 3 && step < 6)
-			ShellAlgorithm(cheese[step], 100000);
-		else if (step >= 6 && step < 9)
-			ShellAlgorithm(cheese[step], 1000000);
-		
+	int* h = new int[t];//массив шагов
+	for (int m = 1; m <= t; m++)
+		h[m - 1] = pow(2, m) - 1;
 
-		stop_time = clock();//заканчиваем считать время
-		average_time += (double)(stop_time - start_time) / CLOCKS_PER_SEC;
-	}
-	
+	ShellAlgorithm(t, h, a, n);
 
-	return (average_time / 9);
+	delete[]h;
 }
+void TheWhipSequence(int* a, const int n) {//Кнут
+	int t = 0;//кол-во шагов
+	int h_1 = 1;
+	while (h_1 < n) {
+		t++;
+		h_1 = 3 * h_1 + 1;
+	}
+
+	int* h = new int[t];//массив шагов
+	h_1 = 1;
+	for (int i = 0; i < t; i++) {
+		h[i] = h_1;
+		h_1 = 3 * h_1 + 1;
+	}
+
+	ShellAlgorithm(t, h, a, n);
+
+	delete[]h;
+}
+void TheSedgwickSequence(int* a, const int n) {
+	int t = 0;//кол-во шагов
+	int h_1 = 0;
+	while (h_1 < n) {
+		t++;
+		if (t % 2 == 0) 
+			h_1 = 9 * pow(2, t / 2) - 9 * pow(2, t / 2) + 1;
+		else
+			h_1 = 8 * pow(2, (t + 1) / 2) - 6 * pow(2, (t + 1) / 2) + 1;
+	}
+
+	int* h = new int[t];//массив шагов
+	h_1 = 1;
+	for (int j = 0; j < t; j++) {
+		if(j%2 ==0)
+			h[j] = 9 * pow(2, j / 2) - 9 * pow(2, j / 2) + 1;
+		else
+			h[j] = 8 * pow(2, (j + 1) / 2) - 6 * pow(2, (j + 1) / 2) + 1;
+	}
+
+	ShellAlgorithm(t, h, a, n);
+
+	delete[]h;
+}
+
+//нахождение среднего времени
+std::vector<double> CreateAverageTime(int** diff_array) {
+	std::vector<double> cheese(4, 0.0);
+
+	for (int i = 0; i < 4; i++) {
+		double time = 0.0;
+		int** copy = diff_array;
+		for (int j = 0; j < 9; j++) {
+			time_t start_time = clock();
+
+			if (i == 0)
+				TheInitialSequence(copy[j], 9);
+			else if(i == 1)
+				SequenceWithLogarithms(copy[j], 9);
+			else if(i == 2)
+				TheWhipSequence(copy[j], 9);
+			else if(i == 3)
+				TheSedgwickSequence(copy[j], 9);
+
+			time_t stop_time = clock();
+			time += (double)(stop_time - start_time) / CLOCKS_PER_SEC;
+		}
+
+		for (int k = 0; k < 9; k++)
+			delete[] copy[k];
+		delete[] copy;
+
+		cheese[i] = time / 9;
+	}
+
+	return cheese;
+};

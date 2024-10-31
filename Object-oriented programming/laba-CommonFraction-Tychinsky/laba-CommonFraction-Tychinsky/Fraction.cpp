@@ -1,4 +1,4 @@
-#include <iostream>
+ï»¿#include <iostream>
 #include "Fraction.h"
 
 using namespace std;
@@ -11,12 +11,12 @@ Fraction::Fraction(const int a, const int b) : numerator(a), denominator(b) {
 
 void Fraction::Scan() {
     system("chcp 1251");
-    cout << "Ââåäèòå ÷èñëèòåëü: ";
+    cout << "Ð’Ð²ÐµÐ´Ð¸Ñ‚Ðµ Ñ‡Ð¸ÑÐ»Ð¸Ñ‚ÐµÐ»ÑŒ: ";
     cin >> numerator;
-    cout << "Ââåäèòå çíàìåíàòåëü: ";
+    cout << "Ð’Ð²ÐµÐ´Ð¸Ñ‚Ðµ Ð·Ð½Ð°Ð¼ÐµÐ½Ð°Ñ‚ÐµÐ»ÑŒ: ";
     cin >> denominator;
     while (!IsCorrectness()) {
-        cout << "Ââåäèòå çíàìåíàòåëü íå ðàâíûé 0: ";
+        cout << "Ð’Ð²ÐµÐ´Ð¸Ñ‚Ðµ Ð·Ð½Ð°Ð¼ÐµÐ½Ð°Ñ‚ÐµÐ»ÑŒ Ð½Ðµ Ñ€Ð°Ð²Ð½Ñ‹Ð¹ 0: ";
         cin >> denominator;
     }
 }
@@ -128,15 +128,15 @@ Fraction Fraction::operator - (const int cheese) {
 void Fraction::WholePartPrint() {
     system("chcp 1251");
     int wholepart = 0, ch = numerator, zn = denominator;
-    if (ch < zn) cout << "Äðîáü íå ìîæåò èìåòü öåëî÷èñëåííûå çíà÷åíèÿ!";
+    if (ch < zn) cout << "Ð”Ñ€Ð¾Ð±ÑŒ Ð½Ðµ Ð¼Ð¾Ð¶ÐµÑ‚ Ð¸Ð¼ÐµÑ‚ÑŒ Ñ†ÐµÐ»Ð¾Ñ‡Ð¸ÑÐ»ÐµÐ½Ð½Ñ‹Ðµ Ð·Ð½Ð°Ñ‡ÐµÐ½Ð¸Ñ!";
     while (ch > zn) {
         ch -= zn;
         wholepart++;
     }
-    cout << "Äðîáü ñ öåëî÷èñëåííûìè çíà÷åíèÿ âûãëÿäèò òàê: " << wholepart << " " << ch << "/" << zn;
+    cout << "Ð”Ñ€Ð¾Ð±ÑŒ Ñ Ñ†ÐµÐ»Ð¾Ñ‡Ð¸ÑÐ»ÐµÐ½Ð½Ñ‹Ð¼Ð¸ Ð·Ð½Ð°Ñ‡ÐµÐ½Ð¸Ñ Ð²Ñ‹Ð³Ð»ÑÐ´Ð¸Ñ‚ Ñ‚Ð°Ðº: " << wholepart << " " << ch << "/" << zn;
 }
 
-//óñòàíîâëåíèå
+//ÑƒÑÑ‚Ð°Ð½Ð¾Ð²Ð»ÐµÐ½Ð¸Ðµ
 void Fraction::EstablishmentNumerator(int cheese) {
     numerator = cheese;
 }

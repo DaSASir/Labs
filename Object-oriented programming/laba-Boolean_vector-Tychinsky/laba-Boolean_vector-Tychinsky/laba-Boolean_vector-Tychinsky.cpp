@@ -9,9 +9,7 @@ using std::vector;
 int main() {
     setlocale(LC_ALL, "ru");
     
-    vector<char> c = {'1','0','1'};
-
-    BoolVector vector1;
+    
 
 
 

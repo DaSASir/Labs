@@ -1,9 +1,9 @@
 ﻿#pragma once
 
-class BoolVector {
+typedef unsigned char UC;
+typedef unsigned int UI;
 
-	typedef unsigned char UC;
-	typedef unsigned int UI;
+class BoolVector {
 	static const int cell_size = 8; // sizeof(UC) * 8
 
 public:
@@ -57,23 +57,10 @@ private:
 
 class BoolVector::BoolRank {
 public:
-    BoolRank(UC* m_cells, const int& index);
-    ~BoolRank();
-
-    BoolRank& operator = (const BoolRank& other);
-    BoolRank& operator = (const bool value);
-    bool operator | (const bool value) const;
-    bool operator & (const bool value) const;
-    bool operator ~ () const;
-    bool operator ^ (const bool value) const;
-    bool operator == (const BoolRank& other) const;
-    bool operator == (const bool value) const;
-
-    operator bool() const;
+    
 
 private:
-    UC* m_cell = nullptr;
-    UI m_mask = 1 << 7;
+    
 };
 
 /*

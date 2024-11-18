@@ -128,6 +128,10 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="laba-The_pyramid_sorting_algorithm-Tychinsky.cpp" />
+    <ClCompile Include="Pyramid.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Pyramid.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

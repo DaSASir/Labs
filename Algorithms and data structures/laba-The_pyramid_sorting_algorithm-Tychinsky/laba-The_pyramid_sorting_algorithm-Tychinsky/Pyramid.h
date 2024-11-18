@@ -1,11 +1,12 @@
 #pragma once
 
-std::vector<int> CreateMassive(int amount);
+std::vector<int> CreateMassive(const int amount);
 
-void PrintArray(std::vector<int> mas);
+void PrintArray(const std::vector<int>& mas);
 
-bool IsOrderly(std::vector<int> mas);
+bool IsOrderly(const std::vector<int>& mas);
 
 
 void PyramidSorting(std::vector<int>& mas);
-void Sift1(std::vector<int> mas, int size, int index);
+void Sift1(std::vector<int>& mas, const int size, int index);
+void Sift2(std::vector<int>& mas, const int size, int index);

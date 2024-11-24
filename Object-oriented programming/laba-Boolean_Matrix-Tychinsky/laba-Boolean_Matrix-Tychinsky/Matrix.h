@@ -1,59 +1,56 @@
-#pragma once
+п»ї#pragma once
 #include "C:\GitHub_Repositories\Labs\Object-oriented programming\laba-Boolean_vector-Tychinsky\laba-Boolean_vector-Tychinsky\Vector.h"
 
 class BoolMatrix {
-	typedef unsigned int UI;
-
 public:
-	// конструкторы (по умолчанию, с параметрами (количество строк/столбцов и значения разрядов), конструктор из матрицы char, конструктор копирования);
+	// РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂС‹ (РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ, СЃ РїР°СЂР°РјРµС‚СЂР°РјРё (РєРѕР»РёС‡РµСЃС‚РІРѕ СЃС‚СЂРѕРє/СЃС‚РѕР»Р±С†РѕРІ Рё Р·РЅР°С‡РµРЅРёСЏ СЂР°Р·СЂСЏРґРѕРІ), РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ РёР· РјР°С‚СЂРёС†С‹ char, РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ РєРѕРїРёСЂРѕРІР°РЅРёСЏ);
 	BoolMatrix();
-	BoolMatrix(const UI col_count, const UI row_count, const bool value);
-	BoolMatrix(const char** matrix, const UI col_count, const UI row_count);
+	BoolMatrix(const int col_count, const int row_count, const bool value);
+	BoolMatrix(const char** matrix, const int col_count, const int row_count);
 	BoolMatrix(const BoolMatrix& other);
-	// деструктор;
+	// РґРµСЃС‚СЂСѓРєС‚РѕСЂ;
 	~BoolMatrix();
-	//получение числа строк и столбцов матрицы;
-	int GetAmountOfRows();
-	int GetAmountOfCols();
-	//обмен содержимого с другой матрицей (swap);
+	//РїРѕР»СѓС‡РµРЅРёРµ С‡РёСЃР»Р° СЃС‚СЂРѕРє Рё СЃС‚РѕР»Р±С†РѕРІ РјР°С‚СЂРёС†С‹;
+	int GetAmountOfRows() const;
+	int GetAmountOfCols() const;
+	//РѕР±РјРµРЅ СЃРѕРґРµСЂР¶РёРјРѕРіРѕ СЃ РґСЂСѓРіРѕР№ РјР°С‚СЂРёС†РµР№ (swap);
 	void Swap(BoolMatrix& other);
-	//ввод/вывод в консоль (потоковый);
-	void Print();
-	//вес матрицы (количество единичных компонент);
+	//РІРІРѕРґ/РІС‹РІРѕРґ РІ РєРѕРЅСЃРѕР»СЊ (РїРѕС‚РѕРєРѕРІС‹Р№);
+	void Print() const;
+	//РІРµСЃ РјР°С‚СЂРёС†С‹ (РєРѕР»РёС‡РµСЃС‚РІРѕ РµРґРёРЅРёС‡РЅС‹С… РєРѕРјРїРѕРЅРµРЅС‚);
 	int Weight();
-	//конъюнкция всех строк (возвращает булев вектор);
-	
-	//дизъюнкция всех строк (возвращает булев вектор);
-	
-	//вес j-ой строки;
-	int Weight(const UI index_row);
-	//инверсия в i-ой компоненты j-ой строки;
+	//РєРѕРЅСЉСЋРЅРєС†РёСЏ РІСЃРµС… СЃС‚СЂРѕРє (РІРѕР·РІСЂР°С‰Р°РµС‚ Р±СѓР»РµРІ РІРµРєС‚РѕСЂ);
+	BoolVector ConjunctionOfRows();
+	//РґРёР·СЉСЋРЅРєС†РёСЏ РІСЃРµС… СЃС‚СЂРѕРє (РІРѕР·РІСЂР°С‰Р°РµС‚ Р±СѓР»РµРІ РІРµРєС‚РѕСЂ);
+	BoolVector DisjunctionOfRows();
+	//РІРµСЃ j-РѕР№ СЃС‚СЂРѕРєРё;
+	int Weight(const int index_row);
+	//РёРЅРІРµСЂСЃРёСЏ РІ i-РѕР№ РєРѕРјРїРѕРЅРµРЅС‚С‹ j-РѕР№ СЃС‚СЂРѕРєРё;
 	void Inversion(const int index_i, const int index_j);
-	//инверсия k компонент j-ой строки, начиная с i-ой компоненты;
+	//РёРЅРІРµСЂСЃРёСЏ k РєРѕРјРїРѕРЅРµРЅС‚ j-РѕР№ СЃС‚СЂРѕРєРё, РЅР°С‡РёРЅР°СЏ СЃ i-РѕР№ РєРѕРјРїРѕРЅРµРЅС‚С‹;
 	void Inversion(const int index_i, const int index_j, const int k);
-	//установка в 0/1 i-ой компоненты j-ой строки;
+	//СѓСЃС‚Р°РЅРѕРІРєР° РІ 0/1 i-РѕР№ РєРѕРјРїРѕРЅРµРЅС‚С‹ j-РѕР№ СЃС‚СЂРѕРєРё;
 	void Set(const bool value, const int index_i, const int index_j);
-	//установка в 0/1 k компонент j-ой строки, начиная с i-ой компоненты;
+	//СѓСЃС‚Р°РЅРѕРІРєР° РІ 0/1 k РєРѕРјРїРѕРЅРµРЅС‚ j-РѕР№ СЃС‚СЂРѕРєРё, РЅР°С‡РёРЅР°СЏ СЃ i-РѕР№ РєРѕРјРїРѕРЅРµРЅС‚С‹;
 	void Set(const bool value, const int index_i, const int index_j, const int k);
 
-	//присваивание (=);
-	
-	//получение строки([]);
-	
-	//построчное побитовое умножение(&, &=);
-	
-	//построчное побитовое сложение(| , |=);
-	
-	//построчное побитовое исключающее ИЛИ(^, ^=);
-	
-	//построчная побитовая инверсия(~).
-
-
-
-
-
+	//РїСЂРёСЃРІР°РёРІР°РЅРёРµ (=);
+	BoolMatrix& operator = (const BoolMatrix& other);
+	//РїРѕР»СѓС‡РµРЅРёРµ СЃС‚СЂРѕРєРё([]);
+	BoolVector& operator [] (const int index);
+	//РїРѕСЃС‚СЂРѕС‡РЅРѕРµ РїРѕР±РёС‚РѕРІРѕРµ СѓРјРЅРѕР¶РµРЅРёРµ(&, &=);
+	BoolMatrix operator & (const BoolMatrix& other) const;
+	BoolMatrix& operator &= (const BoolMatrix& other);
+	//РїРѕСЃС‚СЂРѕС‡РЅРѕРµ РїРѕР±РёС‚РѕРІРѕРµ СЃР»РѕР¶РµРЅРёРµ(| , |=);
+	BoolMatrix operator | (const BoolMatrix& other) const;
+	BoolMatrix& operator |= (const BoolMatrix& other);
+	//РїРѕСЃС‚СЂРѕС‡РЅРѕРµ РїРѕР±РёС‚РѕРІРѕРµ РёСЃРєР»СЋС‡Р°СЋС‰РµРµ РР›Р(^, ^=);
+	BoolMatrix operator ^ (const BoolMatrix& other) const;
+	BoolMatrix& operator ^= (const BoolMatrix& other);
+	//РїРѕСЃС‚СЂРѕС‡РЅР°СЏ РїРѕР±РёС‚РѕРІР°СЏ РёРЅРІРµСЂСЃРёСЏ(~).
+	BoolMatrix operator ~ () const;
 
 private:
 	BoolVector* m_count_vectors = nullptr;
-	UI m_amount_row, m_amount_col;
+	int m_amount_row, m_amount_col;
 };

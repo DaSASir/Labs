@@ -12,7 +12,7 @@ int main() {
     std::cout << "Первоначальный массив: \n";
     PrintArray(ms);
 
-    BitSorting(ms, 100);
+    BitSorting(ms);
     std::cout << "\nОтсортированный массив:\n";
     PrintArray(ms);
 

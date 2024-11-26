@@ -24,3 +24,31 @@ bool IsOrderly(const std::vector<int>& mas) {
 	return true;
 }
 
+void BitSorting(std::vector<int>& mas, const int max_element) {
+	int left = 0;
+	int right = mas.size() - 1;
+	SymbolicSorting(mas, left, right);
+
+	
+}
+
+void SymbolicSorting(std::vector<int>& mas, int& l, int& r) {
+	l = 0;
+	r = mas.size() - 1;
+	int pivot = 0;
+
+	while (l <= r) {
+		while (mas[l] < pivot)
+			l++;
+		while (mas[r] > pivot)
+			r--;
+
+		if (l <= r) {
+			std::swap(mas[l], mas[r]);
+			l++;
+			r--;
+		}
+	}
+}
+
+

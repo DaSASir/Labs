@@ -1,27 +1,71 @@
 ﻿#pragma once
 
 class Array {
-public:
-	//конструкторы
+public: 
 	Array();
-	Array(int a[]);
-	Array(Array b);
-
-	//деструктор
+	Array(const char* array);
+	Array(const Array& other);
 	~Array();
 
-	int AmountOfArray();//получение размера
-	void SwapArrays();//обмен содержимого с другим массивом 
-	int FindIndex();//поиск элемента
+	int GetSize();
 
-	void Print();//ввод/вывод
+	void Swap(Array& other);
+
+	int FindElement(const int value);
+
+	void Print() const;
 	void Scan();
 
-	void Sorting();//сортировка элементов
+	void Sorting();
 
-	//вставка элемента по индексу
-	//удаление элемента по индексу
-	//удаление элемента по значению (первое вхождение)
+	void InsertingByIndex(const int index);
+
+	void DeleteByIndex(const int index);
+	void DeleteByValue(const int value);
+	void DeleteAllByValue(const int value);
+
+	int Min() const;
+	int Max() const;
+
+	Iterator begin();
+	Iterator end();
+
+	void InsertingByIterator();
+
+	void DeleteByIterator();
+
+
+
+	Array operator[] (const int index);
+	Array operator = (const Array& other);
+	Array operator + (const int value);
+	Array operator += (const int value);
+	Array operator + (const Array& otrher);
+	Array operator += (const Array& otrher);
+	bool operator == (const Array& other);
+	bool operator != (const Array& other);
+
+
 private:
-	std::vector<int> array;
+	int* m_array;
+	int m_size = 0;
+};
+
+class Iterator {
+public:
+	Iterator(int* object);
+
+	int& operator*();
+	const int& operator*() const;
+
+	int operator++();
+	int operator--();
+
+	int operator++(int);
+	int operator--(int);
+
+	bool operator==(const int& other) const;
+	bool operator!=(const int& other) const;
+private:
+	int* m_cell = nullptr;
 };

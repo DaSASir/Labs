@@ -3,6 +3,7 @@
 #include "Radix.h"
 
 using std::cout;
+using std::swap;
 
 std::vector<int> CreateMassive(const int amount, const int max, const int min) {
 	std::vector<int> a;
@@ -11,9 +12,8 @@ std::vector<int> CreateMassive(const int amount, const int max, const int min) {
 	return a;
 }
 
-void PrintArray(const std::vector<int>& mas) {
-	for (int i = 0; i < mas.size(); i++)
-		cout << mas[i] << " ";
+void Print(const std::vector<int>& mas) {
+	for(int i : mas) cout << i << " ";
 }
 
 bool IsOrderly(const std::vector<int>& mas) {
@@ -25,64 +25,52 @@ bool IsOrderly(const std::vector<int>& mas) {
 }
 
 void BitSorting(std::vector<int>& mas) {
-	int left = 0;
-	int right = mas.size() - 1;
-	SymbolicSorting(mas, left, right);
+	if (mas.size() <= 1) return;
 
-	MinusSorting(mas, 0, right - 1, 1);
-	PlusSorting(mas, left - 1, 0, 1);
+	int left = 0,
+		right = (unsigned)mas.size() - 1;
+
+	while (left <= right) {
+		while (mas[left] < 0 && left < (unsigned)mas.size())
+			left++;
+		while (mas[right] >= 0 && right >= 0)
+			right--;
+
+		if (left <= right) {
+			swap(mas[left], mas[right]);
+			left++;
+			right--;
+		}
+	}
+
+	int mask = 1 << 30;
+	if(right >= 0) 
+		Sorting(mas, 0, right, mask);
+	if(left < mas.size()) 
+		Sorting(mas, left, (unsigned)mas.size() - 1, mask);
 }
 
-void SymbolicSorting(std::vector<int>& mas, int& l, int& r) {
-	l = 0;
-	r = mas.size() - 1;
-	int pivot = 0;
+void Sorting(std::vector<int>& mas,  int left,  int right, int mask) {
+	if (left >= right || mask <= 0)
+		return;
+
+	int l = left,
+		r = right;
 
 	while (l <= r) {
-		while (mas[l] < pivot)
+		while ((mas[l] & mask) == 0 && l <= r)
 			l++;
-		while (mas[r] > pivot)
+		while ((mas[r] & mask) != 0 && l<= r)
 			r--;
 
 		if (l <= r) {
-			std::swap(mas[l], mas[r]);
+			swap(mas[l], mas[r]);
 			l++;
 			r--;
 		}
 	}
-}
-
-void MinusSorting(std::vector<int>& mas, const int left, const int right, int mask) {
-	int l = left, r = right;
-	while (l <= r) {
-		while ((mas[l] & mask) == mask)
-			l++;
-		while ((mas[r] & mask) != mask)
-			r--;
-
-		if (l <= r) {
-			std::swap(mas[l], mas[r]);
-			l++;
-			r--;
-		}
-	}
-	MinusSorting(mas, left, r, mask <<= 1);
-	MinusSorting(mas, l, right, mask <<= 1);
-}
-void PlusSorting(std::vector<int>& mas, const int left, const int right, int mask) {
-	int l = left, r = right;
-	while (l <= r) {
-		while ((mas[l] & mask) != mask)
-			l++;
-		while ((mas[r] & mask) == mask)
-			r--;
-
-		if (l <= r) {
-			std::swap(mas[l], mas[r]);
-			l++;
-			r--;
-		}
-	}
-	PlusSorting(mas, left, r, mask <<= 1);
-	PlusSorting(mas, l, right, mask <<= 1);
+	if (left <= r)
+		Sorting(mas, left, r, mask >> 1);
+	if (l <= right) 
+		Sorting(mas, l, right, mask >> 1);
 }

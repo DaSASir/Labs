@@ -1,71 +1,82 @@
-﻿#pragma once
+﻿#ifndef ARRAY_H
+#define ARRAY_H
 
+template<typename T>
 class Array {
 public: 
 	Array();
-	Array(const char* array);
+	Array(const T* array, const int size);
 	Array(const Array& other);
 	~Array();
 
-	int GetSize();
+	int GetSize() const;
 
-	void Swap(Array& other);
+	void SwapArrays(Array& other);
 
-	int FindElement(const int value);
+	int FindElement(const T& element);
+	//возвращает индекс первого совпавшего элемента, либо -1, если совпадений нет
 
 	void Print() const;
 	void Scan();
 
 	void Sorting();
 
-	void InsertingByIndex(const int index);
+	void PasteElementByIndex(const int index, const T element);
+	//Если индекс некорректный, вернуть false;
 
-	void DeleteByIndex(const int index);
-	void DeleteByValue(const int value);
-	void DeleteAllByValue(const int value);
+	void DelElementByIndex(const int index);
+	//Если индекс некорректный, вернуть false;
 
-	int Min() const;
-	int Max() const;
+	void DelElement(const T& element);
+	//первое вхождение
 
-	Iterator begin();
-	Iterator end();
+	void DelAllElements(const T& element);
+	//delete everyone element in array
 
-	void InsertingByIterator();
+	T FindMin();
+	T FindMax();
 
-	void DeleteByIterator();
+	Iterator<T> begin();
+	Iterator<T> end();
+	//Метод end должен возвращать итератор не на последний элемент, а за позицию после него
 
+	Iterator GetElement(Iterator<T> pos, const T& element);
 
+	Iterator GetElementInRange(Iterator<T> from, Iterator<T> to);
 
-	Array operator[] (const int index);
-	Array operator = (const Array& other);
-	Array operator + (const int value);
-	Array operator += (const int value);
-	Array operator + (const Array& otrher);
-	Array operator += (const Array& otrher);
-	bool operator == (const Array& other);
-	bool operator != (const Array& other);
-
+	T& operator[](const int index);
+	const T& operator[](const int index) const;
+	Array& operator = (const Array& other);
+	Array operator + (const T& element) const;
+	Array& operator += (const T& element);
+	Array operator + (Array& other) const;
+	Array& operator += (Array& other);
+	bool operator == (const Array& other) const;
+	bool operator != (const Array& other) const;
 
 private:
-	int* m_array;
 	int m_size = 0;
+	T* m_data;
 };
 
-class Iterator {
+template <typename T>
+class Iterator: 
 public:
-	Iterator(int* object);
+	Iterator<T>(T* m_data = nullptr);
 
-	int& operator*();
-	const int& operator*() const;
+	T& operator* ();
+	
+	Iterator<T>& operator ++();
+	Iterator<T> operator ++(const int);
+	Iterator<T>& operator --();
+	Iterator<T> operator --(const int);
+	Iterator<T> operator = (const int& value);
+	Iterator<T> operator += (const int& value);
+	Iterator<T> operator -= (const int& value);
 
-	int operator++();
-	int operator--();
-
-	int operator++(int);
-	int operator--(int);
-
-	bool operator==(const int& other) const;
-	bool operator!=(const int& other) const;
+	bool operator == (const Iterator& other);
+	bool operator != (const Iterator& other);
 private:
-	int* m_cell = nullptr;
+	T* m_data;
 };
+#endif // ARRAY_H 

@@ -1,5 +1,6 @@
 ﻿#include <iostream>
 #include <vector>
+#include <assert.h>
 #include "Radix.h"
 
 using std::cout;
@@ -25,43 +26,15 @@ bool IsOrderly(const std::vector<int>& mas) {
 }
 
 void BitSorting(std::vector<int>& mas) {
-	if (mas.size() <= 1) return;
+	assert(mas.size() > 1);
 
-	int left = 0,
-		right = (unsigned)mas.size() - 1;
-
-	while (left <= right) {
-		while (mas[left] < 0 && left < (unsigned)mas.size())
-			left++;
-		while (mas[right] >= 0 && right >= 0)
-			right--;
-
-		if (left <= right) {
-			swap(mas[left], mas[right]);
-			left++;
-			right--;
-		}
-	}
-
-	int mask = 1 << 30;
-	if(right >= 0) 
-		Sorting(mas, 0, right, mask);
-	if(left < mas.size()) 
-		Sorting(mas, left, (unsigned)mas.size() - 1, mask);
-}
-
-void Sorting(std::vector<int>& mas,  int left,  int right, int mask) {
-	if (left >= right || mask <= 0)
-		return;
-
-	int l = left,
-		r = right;
+	int l = 0,
+		r = mas.size() - 1;
 
 	while (l <= r) {
-		while ((mas[l] & mask) == 0 && l <= r)
-			l++;
-		while ((mas[r] & mask) != 0 && l<= r)
-			r--;
+		while (mas[l] < 0 && l <= r) l++;
+
+		while (mas[r] >= 0 && r >= l) r--;
 
 		if (l <= r) {
 			swap(mas[l], mas[r]);
@@ -69,8 +42,31 @@ void Sorting(std::vector<int>& mas,  int left,  int right, int mask) {
 			r--;
 		}
 	}
-	if (left <= r)
-		Sorting(mas, left, r, mask >> 1);
-	if (l <= right) 
-		Sorting(mas, l, right, mask >> 1);
+
+	int mask = 1 << 31;
+	SortingPositive(mas, l, (mas.size() - 1), mask);
+}
+
+void SortingPositive(std::vector<int>& mas,
+	const int left, const int right, const int mask) {
+
+	assert(left < right && mask > 0);
+
+	int l = left,
+		r = right;
+
+	while (l <= r) {
+		while ((mas[l] & mask) == 0 && l <= r) l++;
+
+		while ((mas[l] & mask) == 1 && l <= r) r--;
+
+		if (l <= r) {
+			swap(mas[l], mas[r]);
+			l++;
+			r--;
+		}
+	}
+
+	SortingPositive(mas, left, r, mask >> 1);
+	SortingPositive(mas, l, right, mask >> 1);
 }

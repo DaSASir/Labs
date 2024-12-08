@@ -15,6 +15,7 @@ std::vector<int> CreateMassive(const int amount, const int max, const int min) {
 
 void Print(const std::vector<int>& mas) {
 	for(int i : mas) cout << i << " ";
+	cout << std::endl;
 }
 
 bool IsOrderly(const std::vector<int>& mas) {
@@ -28,45 +29,52 @@ bool IsOrderly(const std::vector<int>& mas) {
 void BitSorting(std::vector<int>& mas) {
 	assert(mas.size() > 1);
 
-	int l = 0,
-		r = mas.size() - 1;
+	int min_num = GetMin(mas),
+		size = mas.size();
 
-	while (l <= r) {
-		while (mas[l] < 0 && l <= r) l++;
+	if (min_num < 0)
+		for (int i = 0; i < size; i++)
+			mas[i] -= min_num;
 
-		while (mas[r] >= 0 && r >= l) r--;
+	int max_num = GetMax(mas);
 
-		if (l <= r) {
-			swap(mas[l], mas[r]);
-			l++;
-			r--;
+	for (int bit = 0; (1 << bit) <= max_num; bit++) {
+		std::vector<int> array_0, array_1;
+
+		for (int i = 0; i < size; i++) {
+			if (mas[i] & (1 << bit))
+				array_1.push_back(mas[i]);
+			else
+				array_0.push_back(mas[i]);
+		}
+
+		int index = 0;
+		for (int i = 0; i < array_0.size(); i++) {
+			mas[index] = array_0[i];
+			index++;
+		}
+		for (int i = 0; i < array_1.size(); i++) {
+			mas[index] = array_1[i];
+			index++;
 		}
 	}
 
-	int mask = 1 << 31;
-	SortingPositive(mas, l, (mas.size() - 1), mask);
+	if (min_num < 0)
+		for (int i = 0; i < size; i++)
+			mas[i] += min_num;
 }
 
-void SortingPositive(std::vector<int>& mas,
-	const int left, const int right, const int mask) {
-
-	assert(left < right && mask > 0);
-
-	int l = left,
-		r = right;
-
-	while (l <= r) {
-		while ((mas[l] & mask) == 0 && l <= r) l++;
-
-		while ((mas[l] & mask) == 1 && l <= r) r--;
-
-		if (l <= r) {
-			swap(mas[l], mas[r]);
-			l++;
-			r--;
-		}
-	}
-
-	SortingPositive(mas, left, r, mask >> 1);
-	SortingPositive(mas, l, right, mask >> 1);
+int GetMax(const std::vector<int>& mas) {
+	int x = mas[0];
+	for (int i = 1; i < mas.size(); i ++)
+		if (x < mas[i])
+			x = mas[i];
+	return x;
+}
+int GetMin(const std::vector<int>& mas) {
+	int x = mas[0];
+	for (int i = 1; i < mas.size(); i++)
+		if (x > mas[i])
+			x = mas[i];
+	return x;
 }

@@ -7,5 +7,7 @@ void Print(const std::vector<int>& mas);
 bool IsOrderly(const std::vector<int>& mas);
 
 void BitSorting(std::vector<int>& mas);
-void SortingPositive(std::vector<int>& mas,
-	const int left, const int right, const int mask);
+
+int GetMax(const std::vector<int>& mas);
+int GetMin(const std::vector<int>& mas);
+

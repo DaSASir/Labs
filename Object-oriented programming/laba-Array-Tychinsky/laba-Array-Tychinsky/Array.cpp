@@ -1,255 +1,323 @@
-﻿#include <iostream>
-#include <assert.h>
-#include "Array.h"
+﻿#include "Array.h"
 
-//Array
+//yellow
 template <typename T>
-Array<T>::Array() : m_data(nullptr) {}
+Array<T>::Array() 
+    : data(nullptr), size(0) {}
 
 template <typename T>
-Array<T>::Array(const T* array, const int size): m_size(size) {
-	m_data = new T[m_size];
-	for (int i = 0; i < size; i++)
-		m_data[i] = array[i];
+Array<T>::Array(const T* array, int size_a) : size(size_a) {
+    data = new T[size];
+    for (int i = 0; i < size; i++) 
+        data[i] = array[i];
+    
 }
 
 template <typename T>
-Array<T>::Array(const Array& other):m_size(other.m_size) {
-	m_data = new T[m_size];
-	for (int i = 0; i < m_size; i++)
-		m_data[i] = other.m_data[i];
+Array<T>::Array(const Array& other) : size(other.size) {
+    data = new T[size];
+    for (size_t i = 0; i < size; i++) 
+        data[i] = other.data[i];
 }
 
 template <typename T>
 Array<T>::~Array() {
-	delete[] m_data;
+    delete[] data;
 }
 
 template <typename T>
 int Array<T>::GetSize() const {
-	return m_size;
+    return size;
 }
 
 template <typename T>
-void Array<T>::SwapArrays(Array& other) {
-	using std::swap;
-	swap(m_size, other.m_size);
-	swap(m_data, other.m_data);
-}
-
-
-template <typename T>
-int Array<T>::FindElement(const T& element) {
-	for (int i = 0; i < m_size; i++)
-		if (m_data[i] == elemnt)
-			return i;
-	return -1;
+void Array<T>::Swap(Array& other) {
+    using std::swap;
+    swap(size, other.size);
+    swap(data, other.data);
 }
 
 template <typename T>
-void Array<T>::Print() const {
-	using std::cout;
-	cout << "[ ";
-	for (int i = 0; i < m_size; i++)
-		cout << m_data[i] << " ";
-	cout << "]";
+int Array<T>::Find(const T& value) const {
+    for (int i = 0; i < size; i++) 
+        if (data[i] == value) 
+            return i;
+
+    return -1;
+}
+
+template <typename T>
+void Array<T>::Print() const{
+    using std::cout;
+    cout << "[ ";
+    for (int i = 0; i < size; i++)
+        cout << data[i] << " ";
+    cout << "]" << std::endl;
 }
 
 template <typename T>
 void Array<T>::Scan() {
-	for (int i = 0; i < m_size; i++)
-		std::cin >> m_data[i];
+    std::cout << "Введите кол-во элементов: ";
+    std::cin >> size;
+    T* array = new T[size];
+    std::cout << "Введите элементы: " << std::endl;
+    for (int i = 0; i < size; i++)
+        std::cin >> array[i];
+    Array(array, size);
 }
 
 template <typename T>
 void Array<T>::Sorting() {
-	for (int i = 0; i < m_size - 1; i++) {
-		bool check = 0;
-		for (int j = 0; j < m_size - i - 1; j++)
-			if (m_data[j] > m_data[j + 1]) {
-				check = 1; 
-				std::swap(m_data[j], m_data[j + 1]);
-			}
-		if (!(check)) break;
-	}
+    for (int i = 0; i < size - 1; i++) {
+        bool check = 0;
+        for (int j = 0; j < size - i - 1; j++)
+            if (data[j] > data[j + 1]) { 
+                check = 1; 
+                std::swap(data[j], data[j + 1]); 
+            }
+        if (!check) break;
+    }
 }
 
 template <typename T>
-void Array<T>::PasteElementByIndex(const int index, const T element) {
-	if (index > m_size || index < 0) return;
-	m_data[index] = element;
+bool Array<T>::Insert(int index, const T& value) {
+    if (index >= 0 && index < size) {
+        size++;
+        for (int i = size; i > index; i--)
+            data[i] = data[i - 1];
+        data[index] = value;
+    }
+    else if (index == size) {
+        size++;
+        data[index] = value;
+    }
+    else return false;
+
+    return true;
 }
 
 template <typename T>
-void Array<T>::DelElementByIndex(const int index) {
-	if (index > m_size || index < 0) return;
-	T* back = new T[m_size - 1];
-	int i = 0, j = 0;
-	while (i < m_size) {
-		if (i != index) {
-			back[j] = m_data[i];
-			i++;
-			j++;
-		}
-		else
-			i++;
-	}
-	m_data = back;
-	m_size--;
+bool Array<T>::DelIndex(int index) {
+    if (index >= size) return false;
+    
+    for (int i = index; i < size - 1; i++) 
+        data[i] = data[i + 1];
+    
+    size--;
+    return true;
 }
 
 template <typename T>
-void Array<T>::DelElement(const T& element) {
-	T* back = new T[m_size - 1];
-	bool in_array = false;
-	for (int i = 0, j = 0; i < m_size; i++, j++) {
-		if (m_data[i] == element) {
-			i++;
-			in_array = true;
-			break;
-		}
-		else 
-			back[j] = m_data[i];
-		
-	}
-	(in array) ? m_data = back : return;
+bool Array<T>::DelValue(const T& value) {
+    for (int i = 0; i < size; i++) 
+        if (data[i] == value) 
+            return DelIndex(i);
+        
+    return false;
 }
 
 template <typename T>
-void Array<T>::DelAllElements(const T& element) {
-	bool in_array = false;
-	for (int i = 0; i < m_size; i++) {
-		if (m_data[i] == element) {
-			DelElmentByIndex(i);
-			i--;
-		}
-	}
+T& Array<T>::operator[](int index) {
+    assert(index < size && index >= 0);
+    return data[index];
 }
 
 template <typename T>
-T Array<T>::FindMin() {
-	T element = m_data[0];
-	for (int i = 1; i < m_size; i++)
-		if (m_data[i] > element)
-			element = m_data[i];
-	return element;
+const T& Array<T>::operator[](int index) const {
+    assert(index < size && index >= 0);
+    return data[index];
 }
 
 template <typename T>
-T Array<T>::FindMax() {
-	T element = m_data[0];
-	for (int i = 1; i < m_size; i++)
-		if (m_data[i] < element)
-			element = m_data[i];
-	return element;
+Array<T>& Array<T>::operator=(const Array& other) {
+    if (this == other) return *this;
+
+    delete[] data;
+    size = other.size;
+    data = new T[size];
+    for (int i = 0; i < size; i++) 
+        data[i] = other.data[i];
+    
+    return *this;
 }
 
-//итераторская тема
+
+//green
 template <typename T>
-Iterator<T> Array<T>::begin() {
-	return Iterator<T>(m_data);
-}
-
-template <typename T>
-Iterator<T> Array<T>::end() {
-	return Iterator<T>(m_data + m_size);
-}
-
-template <typename T> typename
-Array<T>::Iterator Array<T>::GetElement(Iterator<T> pos, const T& element) {
-	insert(iterator.m_pos, value);
-	iterator.m_pos++;
-	return iterator;
-}
-
-template <typename T>
-Iterator Array<T>::GetElementInRange(Iterator<T> from, Iterator<T> to) {
-
-}
-
-//перегрузки
-template <typename T>
-T& Array<T>::operator[](const int index) {
-	assert(index >= 0 || index < m_size);
-	return m_data[index];
+void Array<T>::DelAll(const T& value) {
+    int i = 0;
+    while (i < size) {
+        if(data[i] == value)
+            DelIndex(i);
+        else
+            i++;
+    }
 }
 
 template <typename T>
-const T& Array<T>::operator[](const int index) const {
-
-}
-
-template <typename T> typename
-Array<T>::Array& Array<T>::operator = (const Array& other) {
-	if (this == other) return *this;
-
-	if (m_size != other.m_size) {
-		m_size = other.m_size;
-		delete[] m_data;
-		m_data = new T[m_size];
-	}
-
-	for (int i = 0; i < m_size; i++)
-		m_data[i] = other.m_data[i];
-
-	return *this;
-}
-
-template <typename T> typename
-Array<T>::Array Array<T>::operator + (const T& element) const {
-	Array back;
-	back.m_size = m_size + 1;
-	back.m_data = new T[back.m_size];
-
-	for (int i = 0; i < m_size; i++)
-		back.m_data[i] = m_data[i];
-
-	back.m_data[m_size] = element;
-
-	return back;
-}
-
-template <typename T>typename
-Array<T>::Array& Array<T>::operator += (const T& element) {
-	*this = *this + element;
-	return *this;
-}
-
-template <typename T>typename
-Array<T>::Array Array<T>::operator + (Array& other) const {
-	Array back;
-	back.m_size = m_size + other.m_size;
-	back.m_data = new T[back.m_size];
-
-	for (int i = 0; i < back.m_size; i++) {
-		if (i < m_size)
-			back.m_data[i] = m_data[i];
-		back.m_data[i] = m_data[i];
-	}
-	return back;
-}
-
-template <typename T>typename
-Array<T>::Array& Array<T>::operator += (Array& other) {
-	*this = *this + other;
-	return *this;
-}
-
-template <typename T>typename
-bool Array<T>::operator == (const Array& other) const {
-	if (m_size != other.m_size) return false;
-
-	for (int i = 0; i < m_size; i++)
-		if (m_data[i] != other.m_data[i])
-			return false;
-
-	return true;
+T Array<T>::GetMax() const {
+    T max = data[0];
+    for (int i = 1; i < size; i++)
+        if (max < data[i])
+            max = data[i];
+    return max;
 }
 
 template <typename T>
-bool Array<T>::operator != (const Array& other) const {
-	return (!(*this == other));
+T Array<T>::GetMin() const {
+    T min = data[0];
+    for (int i = 1; i < size; i++)
+        if (min > data[i])
+            min = data[i];
+    return min;
 }
 
-//Iterator
+template <typename T>
+Array<T>& Array<T>::operator + (const Array& other) {
+    int double_size = m_size + other.m_size;
 
+    Array back(sizeOfTwoObj, 0);
+
+    for (int i = 0, j = 0; i < temp.m_size; i++) {
+        if (i < m_size) {
+            temp[i] = m_numbers[i];
+        }
+        else {
+            temp[i] = object.m_numbers[j];
+            j++;
+        }
+    }
+
+    return temp;
+}
+
+template <typename T>
+Array<T>& Array<T>::operator += (const Array& other) {
+    *this = *this + other;
+    return *this;
+}
+
+template <typename T>
+bool Array<T>::operator == (const Array& other) {
+    if (size != other.size) return false;
+
+    for (int i = 0; i < size; i++)
+        if (data[i] != other.data[i])
+            return false;
+
+    return true;
+}
+
+template <typename T>
+bool Array<T>::operator != (const Array& other) {
+    return !(*this == other);
+}
+
+// no color
+
+template <typename T>
+Array<T>::Iterator::Iterator(T* c) 
+    : cell(c) {}
+
+
+template <typename T>
+T& Array<T>::Iterator::operator*() {
+    return *cell;
+}
+
+template <typename T> typename 
+Array<T>::Iterator& Array<T>::Iterator::operator++() {
+    cell++;
+    return *this;
+}
+
+template <typename T>
+typename Array<T>::Iterator Array<T>::Iterator::operator++(int) {
+    Iterator temp = *this;
+    cell++;
+    return temp;
+}
+
+template <typename T>
+bool Array<T>::Iterator::operator==(const Iterator& other) const {
+    return cell == other.cell;
+}
+
+template <typename T>
+bool Array<T>::Iterator::operator!=(const Iterator& other) const {
+    return cell != other.cell;
+}
+
+template <typename T>
+std::ostream& operator<<(std::ostream& os, const Array<T>& array) {
+    os << "[ ";
+    for (int i = 0; i < array.GetSize(); i++) 
+        os << array[i] << " ";
+    
+    os << "]" << std::endl;
+
+    return os;
+}
+
+template <typename T>
+std::istream& operator>>(std::istream& is, const Array<T>& array) {
+    for (int i = 0; i < array.GetSize(); i++) {
+        std::cout << "Array[" << i << "] = ";
+        is >> object[i];
+    }
+
+    return is;
+}
+
+template <typename T>
+typename Array<T>::Iterator Array<T>::begin() {
+    return Iterator(data);
+}
+
+template <typename T>
+typename Array<T>::Iterator Array<T>::end() {
+    return Iterator(data + size);
+}
+
+template <typename T>
+void Array<T>::InsertIt(Iterator it, const T& value) {
+    Insert(iterator.m_pos, value);
+    it.cell++;
+    return it;
+}
+
+template <typename T>
+void Array<T>::DelIt() {
+    DelIndex();
+}
+
+template <typename T>
+void Array<T>::DelItRange(const Iterator begin, const Iterator end) {
+    assert(begin.cell > end.cell);
+
+    while (begin != end) {
+        DelIt(begin);
+        begin++;
+    }
+}
+
+template <typename T>
+Array<T>& Array<T>::operator + (const T element) {
+    PushBack(element);
+}
+
+template <typename T>
+Array<T>& Array<T>::operator += (const T element) {
+    *this = *this + element;
+    return *this;
+}
+
+template <typename T>
+void Array<T>::PushBack(const T& value) {
+    Array back;
+    back.data = new T[size + 1];
+    for (int i = 0; i < size; i++)
+        back.datd[i] = data[i];
+    back.data[size] = value;
+    return back;
+}

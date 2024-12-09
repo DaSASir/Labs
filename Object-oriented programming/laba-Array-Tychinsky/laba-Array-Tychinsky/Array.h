@@ -1,82 +1,101 @@
 ﻿#ifndef ARRAY_H
 #define ARRAY_H
 
-template<typename T>
-class Array {
-public: 
-	Array();
-	Array(const T* array, const int size);
-	Array(const Array& other);
-	~Array();
-
-	int GetSize() const;
-
-	void SwapArrays(Array& other);
-
-	int FindElement(const T& element);
-	//возвращает индекс первого совпавшего элемента, либо -1, если совпадений нет
-
-	void Print() const;
-	void Scan();
-
-	void Sorting();
-
-	void PasteElementByIndex(const int index, const T element);
-	//Если индекс некорректный, вернуть false;
-
-	void DelElementByIndex(const int index);
-	//Если индекс некорректный, вернуть false;
-
-	void DelElement(const T& element);
-	//первое вхождение
-
-	void DelAllElements(const T& element);
-	//delete everyone element in array
-
-	T FindMin();
-	T FindMax();
-
-	Iterator<T> begin();
-	Iterator<T> end();
-	//Метод end должен возвращать итератор не на последний элемент, а за позицию после него
-
-	Iterator GetElement(Iterator<T> pos, const T& element);
-
-	Iterator GetElementInRange(Iterator<T> from, Iterator<T> to);
-
-	T& operator[](const int index);
-	const T& operator[](const int index) const;
-	Array& operator = (const Array& other);
-	Array operator + (const T& element) const;
-	Array& operator += (const T& element);
-	Array operator + (Array& other) const;
-	Array& operator += (Array& other);
-	bool operator == (const Array& other) const;
-	bool operator != (const Array& other) const;
-
-private:
-	int m_size = 0;
-	T* m_data;
-};
+#include <iostream>
+#include <assert.h>
 
 template <typename T>
-class Iterator: 
+class Array {
 public:
-	Iterator<T>(T* m_data = nullptr);
+    //----------<YELLOW>----------
+    Array();
+    Array(const T* arr, int n);
+    Array(const Array& other);
+    ~Array();
 
-	T& operator* ();
-	
-	Iterator<T>& operator ++();
-	Iterator<T> operator ++(const int);
-	Iterator<T>& operator --();
-	Iterator<T> operator --(const int);
-	Iterator<T> operator = (const int& value);
-	Iterator<T> operator += (const int& value);
-	Iterator<T> operator -= (const int& value);
+    int GetSize() const;
+    //получение размера (количества хранимых элементов в настоящий момент)
+    void Swap(Array& other);
+    //обмен содержимого с другим массивом
+    int Find(const T& value) const;
+    //поиск элемента(возвращает индекс первого совпавшего элемента,
+    // либо - 1, если совпадений нет)
+    void Print() const;
+    void Scan();
+    //ввод/вывод в консоль
+    void Sorting();
+    //сортировка элементов(любым алгоритмом)
+    bool Insert(int index, const T& value);
+    //вставка элемента по индексу. Если индекс некорректный, вернуть false
+    bool DelIndex(int index);
+    //удаление элемента по индексу. Если индекс некорректный, вернуть false
+    bool DelValue(const T& value);
+    //удаление элемента по значению (первое вхождение). 
+    //Если элемент отсутствует в массиве, вернуть false
+    T& operator[](int index);
+    const T& operator[](int index) const;
+    //получение ссылки на элемент по индексу ([ ])
+    Array& operator=(const Array& other);
+    //присваивание (=)
 
-	bool operator == (const Iterator& other);
-	bool operator != (const Iterator& other);
+
+    //----------<GREEN>----------
+    void DelAll(const T& value);
+    //удаление всех элементов с заданным значением
+    T GetMax() const;
+    T GetMin() const;
+    //поиск максимального/минимального элемента
+    Array& operator + (const Array& other);
+    Array& operator += (const Array& other);
+    //сложение (конкатенация) с другим массивом 
+    //(здесь имеется в виду другим объектом нашего класса, а не стандартные массивы) (+ и +=);
+    bool operator == (const Array& other);
+    bool operator != (const Array& other);
+    //сравнение (== и !=)
+
+
+    //----------<NO COLOR>----------
+    class Iterator {
+    private:
+        T* cell;
+    public:
+        Iterator(T* c);
+        T& operator*();
+        Iterator& operator++();
+        Iterator operator++(int);
+        bool operator==(const Iterator& other) const;
+        bool operator!=(const Iterator& other) const;
+    };
+    //класс итератор
+    template <typename U>
+    friend std::ostream& operator<<(std::ostream& os, const Array<U>& array);
+    template <typename U>
+    friend std::istream& operator>>(std::istream& is, const Array<U>& array);
+    //потоковый ввод/вывод
+    Iterator begin();
+    Iterator end();
+    // получение итераторов на начало/конец массива (методы должны называться begin и end.
+    // Метод end должен возвращать итератор не на последний элемент, а за позицию после него)
+    void InsertIt(Iterator it, const T& value);
+    //вставка элемента перед итератором
+    void DelIt();
+    void DelItRange(const Iterator begin, const Iterator end);
+    //удаление элемента или диапазона элементов с помощью итераторов
+    Array& operator + (const T element);
+    Array& operator += (const T element);
+    //добавление элемента в конец массива (+ и +=)
+
+
+
+    //Доп функции
+    void PushBack(const T& value);
+
+
 private:
-	T* m_data;
+    T* data;
+    int size;
 };
-#endif // ARRAY_H 
+
+#include "Array.cpp" 
+
+#endif

@@ -1,84 +1,125 @@
-﻿#pragma once
-#include "C:\GitHub_Repositories\Labs\Object-oriented programming\laba-Array-Tychinsky\laba-Array-Tychinsky\Array.h"
+﻿#ifndef LIST_H
+#define LIST_H
+#include <iostream>
 
+template <typename T>
+class Node {
+    T data;
+    Node<T>* next;
+    Node<T>* prev;
+
+    Node(const T& value, Node<T>* prev = nullptr, Node<T>* next = nullptr)
+        : data(value), next(next), prev(prev) {}
+
+    friend class List<T>;
+};
+
+template <typename T>
 class List {
-
 public:
-	//- конструкторы (по умолчанию, конструктор из класса-массива, конструктор копирования);
-	List();
-	List(const Array& array);
-	List(const List& other);
-	//- деструктор;
-	~List();
+    class Iterator;
+    class ConstIterator;
+public:
+    //----------<YELLOW>----------
+    List();
+    List(const T* array, int size_a);
+    List(const List<T>& other);
+    ~List();
 
-	//- получение размера списка;
-	int Size();
+    int GetSize() const;
 
-	//- обмен содержимого с другим списком (swap);
-	void Swap(List& other);
+    void Swap(List<T>& other);
 
-	//- ввод/вывод в консоль (потоковый);
-	void Print();
-	void Scan();
+    void Print() const;
+    void Scan();
 
-	//- получение итераторов на начало/конец списка (методы должны называться begin и end. Метод end должен возвращать итератор не на последний элемент, а за позицию после него);
+    Node<T>* FindByKey(const T& key) const;
 
-	//- поиск элемента по ключу (возвращает указатель/итератор на элемент или nullptr, если элемента нет в списке);
-	Node* FindKey(const char key);
+    void AddTail(const T& value);
+    void AddHead(const T& value);
 
-	//- добавление элемента (в голову, хвост, на позицию, после ключа (после первого вхождения), по итератору);
-	void AddToTail(const char data);
-	void AddToHead(const char data);
-	void AddAfterKey(const char data, Node* key);
-	void AddToIterator(const char data, Node* key);
+    void DelTail();
+    void DelHead();
 
-	//- удаление элемента (из головы, хвоста, позиции, по ключу (первое вхождение), по итератору);
-	void DelHead();
-	void DelTail();
-	void DelKey(Node* p);
-	void DelIterator(Node* p);
+    List<T>& operator=(const List<T>& other);
+    T& operator[](int index);
+    const T& operator[](int index) const;
+    bool operator==(const List<T>& other) const;
+    bool operator!=(const List<T>& other) const;
 
-	//- удаление диапазона элементов с помощью итераторов;
+    //----------<GREEN>----------
+    void AddByPosition(int pos, const T& value);
+    void AddAfterKey(const T& key, const T& value);
 
-	//- поиск максимального/минимального элемента;
-	char MaxElement();
-	char MinElement();
-	//- isEmpty() - возвращает true, если список пуст;
-	bool IsEmpty();
+    void DelByPosition(int pos);
+    void DelAfterKey(const T& key);
 
-	//- очистка списка;
-	void Clear();
+    T FindMax() const;
+    T FindMin() const;
 
-	//- сортировка списка;
-	void Sorting();
+    bool IsEmpty() const;
 
-	//- присваивание (=);
-	List operator = (const List& other);
-	//- получение ссылки на ключ элемента ([ ]);
-	Node* operator [] (const int index);
-	//- сравнение (==, !=);
-	bool operator == ( List& other);
-	bool operator != ( List& other);
-	//- сложение (конкатенация) списков (+, +=).
-	List operator + (const List& other);
-	List operator += (const List& other);
+    void Clear();
+
+    List<T> operator+(const List<T>& other) const;
+    List<T>& operator+=(const List<T>& other);
+
+    //----------<NO COLOR>----------
+    template <typename U>
+    friend std::ostream& operator<<(std::ostream& os, const List<U>& list);
+    template <typename U>
+    friend std::istream& operator>>(std::istream& is, List<U>& list);
+
+    Iterator begin();
+    Iterator end();
+
+    ConstIterator begin() const;
+    ConstIterator end() const;
+    
+    void FindByIterator(const T& value);
+
+    void AddByIterator(const T& value, Iterator pos);
+
+    void DelByIterator(Iterator pos);
+    void DelRange(Iterator from, Iterator to);
+
+    void Sorting();
 
 private:
-	Node* head;
-	Node* tail;
+    Node<T>* head;
+    Node<T>* tail;
+    int size;
 };
 
-class Node {
-	char m_data;
-	Node* last, * next;
-
+template <typename T>
+class List<T>::Iterator {
+    Node<T>* cell;
 public:
-	Node(char k = 0, Node* lst = nullptr, Node* nxt = nullptr);
-	char Data();
+    Iterator(Node<T>* c = nullptr) : cell(c) {}
 
-	friend class List;
+    T& operator*();
+    Iterator& operator++();
+    Iterator operator++(int);
+    Iterator& operator--();
+    Iterator operator--(int);
+    bool operator==(const Iterator& other) const;
+    bool operator!=(const Iterator& other) const;
 };
 
-class Iterator {
-	//не знаю что это и зачем)
+template <typename T>
+class List<T>::ConstIterator {
+    const Node<T>* cell;
+public:
+    ConstIterator(const Node<T>* c = nullptr) : cell(c) {}
+
+    const T& operator*() const;
+    ConstIterator& operator++();
+    ConstIterator operator++(int);
+    ConstIterator& operator--();
+    ConstIterator operator--(int);
+    bool operator==(const ConstIterator& other) const;
+    bool operator!=(const ConstIterator& other) const;
 };
+
+#include "List.cpp"
+#endif 

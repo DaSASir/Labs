@@ -1,247 +1,449 @@
-﻿#include <iostream>
-#include "List.h"
+﻿#include "List.h"
 
-using std::cout;
-using std::cin;
-using std::endl;
+//yellow
+template <typename T>
+List<T>::List() 
+    : head(nullptr), tail(nullptr), size(0) {}
 
-//Node
-Node:: Node(char k = 0, Node* lst = nullptr, Node* nxt = nullptr)
-	: m_data(k), last(lst), next(nxt) {
-}
-char Node:: Data() {
-	return m_data;
+template <typename T>
+List<T>::List(const T* array, int size_a) : List() {
+    for (int i = 0; i < size_a; i++) 
+        AddTail(array[i]);
 }
 
-//List
-List::List() {
-	head = new Node;
-	tail = new Node(0, head, nullptr);
-	head->next = tail;
-}
-List::List(const Array& array) {
-	Clear();
-	List();
-
-	int lenth_of_array = 1;
-	for (int i = 0; i < lenth_of_array; i++)
-		AddToTail(0);
-}
-List::List(const List& other) {
-	head = new  Node;
-	tail = new  Node(0, head, nullptr);
-
-	head->next = tail;
-
-	Node* q = other.head->next;
-
-	while (q != other.tail) {
-		AddToTail(q->m_data);
-		q = q->next;
-	}
+template <typename T>
+List<T>::List(const List<T>& other) : List() {
+    for (Iterator i = other.begin(); i != other.end(); i++)
+        AddTail(*i);
 }
 
-List::~List() {
-	Clear();
-	delete head, tail;
+template <typename T>
+List<T>::~List() {
+    Clear();
 }
 
-int List::Size() {
-	Node* adapter = head->next;
-
-	int weight = 0;
-	while (adapter != tail) {
-		weight++;
-		adapter = adapter->next;
-	}
-	return weight;
+template <typename T>
+int List<T>::GetSize() const {
+    return size;
 }
 
-void List::Swap(List& other) {
-	using std::swap;
-	swap(head,other.head);
-	swap(tail, other.tail);
-
-	int size;
-	Size() > other.Size() ? size = Size() : size = other.Size();
-
-	Node* adapter = head->next;
-	Node* adapter2 = other.head->next;
-
-	for (int i = 0; i < size; i++) {
-		if (adapter == tail || adapter2 == other.tail) break;
-
-		swap(adapter->m_data, adapter2->m_data);
-	}
+template <typename T>
+void List<T>::Swap(List<T>& other) {
+    using std::swap;
+    swap(head, other.head);
+    swap(tail, other.tail);
+    swap(size, other.size);
 }
 
-void List::Print() {
-	if ((head->next) == tail) 
-		cout << "list is empty" << endl;
-	else {
-		Node* q = head->next;
-
-		while (q != tail) {
-			cout << q->m_data << ' ';
-			q = q->next;
-		}
-	}
-}
-void List::Scan() {
-	int n;
-	cout << "Введите количество элементов в списке - ";
-	cin >> n;
-
-	cout << "введите " << n << " элементов списка:" << endl;
-	this->Clear();
-
-	int element;
-	for (int i = 0; i < n; i++) {
-		cin >> element;
-		AddToTail(element);
-	}
+template <typename T>
+void List<T>::Print() const {
+    using std::cout;
+    using std::endl;
+    cout << "[ ";
+    Node<T> adapter = head;
+    while (adapter) {
+        cout << adapter->data << " ";
+        adapter = adapter->next;
+    }
+    cout << "]" << endl;
 }
 
-Node* List::FindKey(const char key) {
-	if (head->m_data == key)
-		return head;
+template <typename T>
+void List<T>::Scan() {
+    using std::cin;
+    using std::cout;
 
-	else {
-		Node* adapter = head;
-		while (adapter != NULL && adapter->m_data != key)
-			adapter = adapter->next;
+    cout << "Введите кол-во элементов: ";
+    cin >> size;
 
-		if (adapter == NULL)
-			return NULL;
-
-		else return adapter;
-	}
+    cout << "Введите элементы: " << std::endl;
+    for (int i = 0; i < size; i++) {
+        T x;
+        cin >> x;
+        AddTail(x);
+    }
 }
 
-void List::AddToTail(const char data) {
-	AddAfterKey(data, tail->last);
-}
-void List::AddToHead(const char data) {
-	AddAfterKey(data, head);
-}
-void List::AddAfterKey(const char data, Node* key) {
-	Node* adapter = new Node;
-	adapter->m_data = data;
-	adapter->next = key->next;
-	adapter->last = key;
-	key->next = adapter;
-	adapter->next->last = adapter;
-}
-void List::AddToIterator(const char data, Node* key) {
-
+template <typename T>
+Node<T>* List<T>::FindByKey(const T& key) const {
+    Node<T>* back = head;
+    while (back) {
+        if (back->data == key)
+            return back;
+        
+        back = back->next;
+    }
+    return nullptr;
 }
 
-void List::DelHead() {
-	if (head->next == tail)
-		puts("список пустой");
-	else DelKey(head->next);
-}
-void List::DelTail() {
-	if (head->next == tail)
-		puts("список пустой");
-	else DelKey(tail->last);
-}
-void List::DelKey(Node* p) {
-	p->last->next = p->next;
-	p->next->last = p->last;
-	delete p;
-}
-void List::DelIterator(Node* p) {
-
+template <typename T>
+void List<T>::AddTail(const T& value) {
+    Node<T>* new_cell = new Node<T>(value, tail, nullptr);
+    if (tail) 
+        tail->next = new_cell;
+    else 
+        head = new_cell;
+    
+    tail = new_cell;
+    size++;
 }
 
-char List::MaxElement() {
-	List copy(*this);
-	copy.Sorting();
-
-	Node* element = copy.tail->last;
-	return element->m_data;
-}
-char List::MinElement() {
-	List copy(*this);
-	copy.Sorting();
-
-	Node* element = copy.head->next;
-	return element->m_data;
+template <typename T>
+void List<T>::AddHead(const T& value) {
+    Node<T>* new_cell = new Node<T>(value, nullptr, head);
+    if (head) 
+        head->prev = new_cell;
+    else 
+        tail = new_cell;
+    
+    head = new_cell;
+    size++;
 }
 
-bool List::IsEmpty() {
-	return head->next == tail;
+template <typename T>
+void List<T>::DelTail() {
+    if (IsEmpty()) return;
+
+    Node<T>* temp = tail;
+    tail = tail->prev;
+    if (tail)
+        tail->next = nullptr;
+    else 
+        head = nullptr;
+    delete temp;
+    size--;
 }
 
-void List::Clear() {
-	while (!IsEmpty())
-		DelHead();
+template <typename T>
+void List<T>::DelHead() {
+    if (IsEmpty()) return;
+
+    Node<T>* temp = head;
+    head = head->next;
+    if (head) 
+        head->prev = nullptr;
+    else 
+        tail = nullptr;
+    
+    delete temp;
+    size--;
 }
 
-void List::Sorting() {
-	for (int i = 0; i < Size() - 1; i++) {
-		bool checking = 0;
-
-		Node* adapter = head->next;
-		Node* adapter2 = adapter->next;
-
-		for (int j = 0; j < Size() - i - 1; j++)
-			if (adapter > adapter2) {
-				checking = 1; 
-				std::swap(adapter, adapter2);
-			}
-		if (!checking) break;
-	}
+template <typename T>
+List<T>& List<T>::operator=(const List<T>& other) {
+    List back(other);
+    return back;
 }
 
-List List:: operator = (const List& other) {
-	if (this == &other) return *this;
+template <typename T>
+T& List<T>::operator[](int index) {
+    if (index < 0 || index >= size) return;
 
-	Clear();
-	Node* adapter = other.head;
-	while (adapter != tail || adapter == tail) {
-		this->AddToTail(adapter->m_data);
-		adapter = adapter->next;
-	}
-	return *this;
-}
-Node* List::operator [] (const int index) {
-	Node* adapter = head->next;
+    Node<T>* adapter = head->next;
+    if (int i = 0; i < index; i++)
+        adapter = adapter->next;
 
-	for (int i = 0; i < index; i++) 
-		adapter = adapter->next;
+    return adapter->data;
+}
 
-	return adapter;
-}
-bool List:: operator == ( List& other) {
-	if (Size() != other.Size())
-		return false;
+template <typename T>
+const T& List<T>::operator[](int index) const {
+    if (index < 0 || index >= size) return;
 
-	Node* adapter = head->next;
-	Node* adapter2 = other.head->next;
+    Node<T>* adapter = head->next;
+    if (int i = 0; i < index; i++)
+        adapter = adapter->next;
 
-	for (int i = 0; i < Size(); i++) {
-		if (adapter->m_data != adapter2->m_data) {
-			return false;
-			break;
-		}
-		adapter = adapter->next;
-		adapter2 = adapter2->next;
-	}
-	return true;
+    return adapter->data;
 }
-bool List:: operator != ( List& other) {
-	return !(*this == other);
+
+template <typename T>
+bool List<T>::operator==(const List<T>& other) const {
+    if (size != other.size) return false;
+
+    Node<T>* a1 = head;
+    Node<T>* a2 = other.head;
+    
+    while (a1 && a2) {
+        if (a1->data != a1->data)
+            return false;
+        a1 = a1->next;
+        a2 = a2->next;
+    }
+
+    return true;
 }
-List List::operator + (const List& other) {
-	List back(*this);
-	return back += other;
+
+template <typename T>
+bool List<T>::operator!=(const List<T>& other) const {
+    return !(this == other);
 }
-List List::operator += (const List& other) {
-	Node* adapter = other.head->next;
-	for (adapter; adapter != other.tail; adapter = adapter->next) 
-		this->AddToTail(adapter->m_data);
-	
-	return *this;
+
+//green
+template <typename T>
+void List<T>::AddByPosition(int pos, const T& value) {
+    if (pos == 0) {
+        AddHead(value);
+        return;
+    }
+    if (pos >= size) {
+        AddTail(value);
+        return;
+    }
+
+    Node<T>* adapter = head;
+    for (int i = 0; i < pos - 1; ++i) 
+        adapter = adapter->next;
+    
+
+    Node<T>* new_cell = new Node<T>(value, adapter, adapter->next);
+    adapter->next->prev = new_cell;
+    adapter->next = new_cell;
+
+    size++;
+}
+
+template <typename T>
+void List<T>::AddAfterKey(const T& key, const T& value) {
+    Node<T>* adapter = FindByKey(key);
+    if (adapter) {
+        Node<T>* new_cell = new Node<T>(value, adapter, adapter->next);
+        if (adapter->next) 
+            adapter->next->prev = new_cell;
+        else 
+            tail = new_cell;
+
+        adapter->next = new_cell;
+        size++;
+    }
+}
+
+template <typename T>
+void List<T>::DelByPosition(int pos) {
+    if (pos >= size) return;
+
+    if (pos == 0) {
+        AddHead();
+        return;
+    }
+    if (pos == listSize - 1) {
+        AddTail();
+        return;
+    }
+
+    Node<T>* adapter = head;
+    for (int i = 0; i < pos; ++i) 
+        adapter = adapter->next;
+
+    adapter->prev->next = adapter->next;
+    adapter->next->prev = adapter->prev;
+    delete adapter;
+    size--;
+}
+
+template <typename T>
+void List<T>::DelAfterKey(const T& key) {
+    Node<T>* adapter = FindByKey(key);
+    if (adapter) {
+        if (adapter == head) 
+            DelHead();
+        else if (adapter == tail) 
+            DelTail();
+        else {
+            adapter->prev->next = adapter->next;
+            adapter->next->prev = adapter->prev;
+            delete adapter;
+            size--;
+        }
+    }
+}
+
+template <typename T>
+T List<T>::FindMax() const {
+    T max_el = head->data;
+    Node<T>* adapter = head->next;
+    while (adapter) {
+        if (adapter->data > max_el)
+            max_el = adapter->data;
+        
+        adapter = adapter->next;
+    }
+    return max_el;
+}
+
+template <typename T>
+T List<T>::FindMin() const {
+    T min_el = head->data;
+    Node<T>* adapter = head->next;
+    while (adapter) {
+        if (adapter->data < min_el)
+            min_el = adapter->data;
+        
+        adapter = adapter->next;
+    }
+    return min_el;
+}
+
+template <typename T>
+bool List<T>::IsEmpty() const {
+    return (size == 0);
+}
+
+template <typename T>
+void List<T>::Clear() {
+    while (!IsEmpty())
+        DelHead();
+}
+
+template <typename T>
+List<T> List<T>::operator+(const List<T>& other) const {
+    List<T> sum(*this);
+    sum += other;
+    return sum;
+}
+
+template <typename T>
+List<T>& List<T>::operator+=(const List<T>& other) {
+    for (Iterator it = other.begin(); it != other.end(); it++)
+        this->AddTail(*it);
+    
+    return *this;
+}
+
+//no color
+template <typename T>
+std::ostream& operator<<(std::ostream& os, const List<T>& list) {
+    os << "[ ";
+    for (Iterator i = list.begin(); i != list.end(); i++)
+        os << *i << " ";
+    os << "]";
+
+    return os;
+}
+
+template <typename T>
+std::istream& operator>>(std::istream& is, List<T>& list) {
+    for (Iterator i = list.begin(); i != list.end(); i++) 
+        is >> *i;
+
+    return is;
+}
+
+template <typename T>
+typename List<T>::Iterator List<T>::begin() {
+    return Iterator(head);
+}
+
+template <typename T>
+typename List<T>::Iterator List<T>::end() {
+    return Iterator(nullptr);
+}
+
+template <typename T>
+typename List<T>::ConstIterator List<T>::begin() const {
+    return ConstIterator(head);
+}
+
+template <typename T>
+typename List<T>::ConstIterator List<T>::end() const {
+    return ConstIterator(nullptr);
+}
+
+template <typename T>
+void List<T>::FindByIterator(const T& value) {
+    for (Iterator it = begin(); it != end(); it++)
+        if (*it == value)
+            return it;
+
+    return end();
+}
+
+template <typename T>
+void List<T>::AddByIterator(const T& value, Iterator pos) {
+    if (pos == begin())
+        AddHead(value);
+    else if (pos == end())
+        AddTail(value);
+    else {
+        int index = 0;
+        for (Iterator i = begin(); i != pos; i++)
+            index++;
+        AddByPosition(index, value);
+    }
+}
+
+template <typename T>
+void List<T>::DelByIterator(Iterator pos) {
+    if (pos == end()) return;
+
+    if (pos == head)
+        DelHead();
+    else if (pos == tail)
+        DelTail();
+    else{
+        int index = 0;
+        for (Iterator i = begin(); i != pos; i++)
+            index++;
+        DelByPosition(index, value);
+    }
+}
+
+template <typename T>
+void List<T>::DelRange(Iterator from, Iterator to) {
+    while (from != to) {
+        DelByIterator(from);
+        from++;
+    }
+}
+
+template <typename T>
+void List<T>::Sorting() {
+    if (size < 2) return;
+
+    for (Iterator i = begin(); i != end(); i++)
+        for (Iterator j = begin(); j != end(); j++)
+            if (*i < *j)
+                std::swap(i.cell->data, j.cell->data);
+}
+
+
+//iteartor
+template <typename T>
+T& List<T>::Iterator::operator*() {
+    return cell->data;
+}
+template <typename T>
+List<T>::Iterator& List<T>::Iterator::operator++() {
+    cell = cell->next;
+    return *this;
+}
+
+template <typename T>
+List<T>::Iterator List<T>::Iterator::operator++(int) {
+    Iterator old = *this;
+    (*this)++;
+    return old;
+}
+
+template <typename T>
+List<T>::Iterator& List<T>::Iterator::operator--() {
+    cell = cell->prev;
+    return *this;
+}
+
+template <typename T>
+List<T>::Iterator List<T>::Iterator::operator--(int) {
+    Iterator old = *this;
+    (*this)--;
+    return old;
+}
+
+template <typename T>
+bool List<T>::Iterator::operator==(const Iterator& other) const {
+    return cell == other.cell;
+}
+
+template <typename T>
+bool List<T>::Iterator::operator!=(const Iterator& other) const {
+    return cell != other.cell;
 }

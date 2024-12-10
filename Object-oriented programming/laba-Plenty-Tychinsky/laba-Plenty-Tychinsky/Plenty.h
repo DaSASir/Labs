@@ -1,8 +1,11 @@
 ﻿#pragma once
-#include "C:\GitHub_Repositories\Labs\Object-oriented programming\laba-Boolean_vector-Tychinsky\laba-Boolean_vector-Tychinsky\Vector.h"
+#include "..\..\laba-Boolean_vector-Tychinsky\laba-Boolean_vector-Tychinsky\Vector.h"
 
 struct Plenty :protected BoolVector {
-	static const int full_size = 256;
+	static const int start_table = 32;
+	static const int size_table = 127 - start_table;
+	char elements[size_table];
+	int size;
 
 	Plenty();
 	Plenty(const char* array);
@@ -13,13 +16,13 @@ struct Plenty :protected BoolVector {
 	void Scan();
 
 	//проверка наличия элемента в множестве;
-	bool InPlenty(const char element);
+	bool InPlenty(const char element) const;
 
-	int MaxElement() const;
-	int MinElement() const;
+	char MaxElement() const;
+	char MinElement() const;
 
 	//получение мощности множества;
-	int Capacity() const;
+	int Capacity();
 
 	//присваивание (=);
 	Plenty operator = (const Plenty& other);
@@ -38,11 +41,11 @@ struct Plenty :protected BoolVector {
 	//получение дополнения (~, множество, состоящее из элементов, которые не входят в исходное множество);
 	Plenty operator ~ ();
 	//добавление элемента к множеству (+, +=);
-	Plenty operator + (const Plenty& other) const;
-	Plenty operator += (const Plenty& other);
+	Plenty operator + (const char value) const;
+	Plenty operator += (const char value);
 	//удаление элемента из множества (-, -=);
 	Plenty operator - (const char value) const;
-	Plenty operator -= (const Plenty& other);
+	Plenty operator -= (const char value);
 };
 
 std::ostream& operator << (std::ostream& stream, const Plenty& other);

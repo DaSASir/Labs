@@ -1,7 +1,7 @@
-#include <iostream>
-#include <fstream>//файлы
-#include <time.h>//время
-#include <cmath>//для логарифмов
+п»ї#include <iostream>
+#include <fstream>//С„Р°Р№Р»С‹
+#include <time.h>//РІСЂРµРјСЏ
+#include <cmath>//РґР»СЏ Р»РѕРіР°СЂРёС„РјРѕРІ
 #include <vector>
 #include "Shell.h"
 
@@ -18,7 +18,7 @@ void TheInitialSequence(int* a, const int n) {
 void ShellAlgorithm(int t, int* h, int* a, int n) {
 	for (int i = 0; i <= t; i++) {
 		int s = h[i];
-		for (int b = 0; b < s; b++) {//Вставка для подпоследовательности
+		for (int b = 0; b < s; b++) {//Р’СЃС‚Р°РІРєР° РґР»СЏ РїРѕРґРїРѕСЃР»РµРґРѕРІР°С‚РµР»СЊРЅРѕСЃС‚Рё
 			for (int j = b + s; j < n; j += s) {
 				int x = a[j];
 				int k = j - s;
@@ -95,16 +95,17 @@ void DeleteMatrix(int** a,const int n) {
 	delete[]a;
 }
 
-//другие формулы для выбора длин шагов в алгоритме Шелла
+//РґСЂСѓРіРёРµ С„РѕСЂРјСѓР»С‹ РґР»СЏ РІС‹Р±РѕСЂР° РґР»РёРЅ С€Р°РіРѕРІ РІ Р°Р»РіРѕСЂРёС‚РјРµ РЁРµР»Р»Р°
 void SequenceWithLogarithms(int* a, const int n) {
 	std::vector<int> h;
 
 	for (int m = 1; m <= (int)log2(n); m++)
 		h.push_back((int)pow(2, m) - 1);
 
+	std::reverse(h.begin(), h.end());
 	ShellAlgorithm(h.size(), h.data(), a, n);
 }
-void TheWhipSequence(int* a, const int n) {//Кнут
+void TheWhipSequence(int* a, const int n) {//РљРЅСѓС‚
 	std::vector<int> h;
 
 	int h_1 = 1;
@@ -112,7 +113,7 @@ void TheWhipSequence(int* a, const int n) {//Кнут
 		h.push_back(h_1);
 		h_1 = 3 * h_1 + 1;
 	}
-
+	std::reverse(h.begin(), h.end());
 	ShellAlgorithm(h.size(), h.data(), a, n);
 }
 void TheSedgwickSequence(int* a, const int n) {
@@ -130,6 +131,6 @@ void TheSedgwickSequence(int* a, const int n) {
 		h.push_back(h_1);
 		t++;
 	}
-
+	std::reverse(h.begin(), h.end());
 	ShellAlgorithm(h.size(), h.data(), a, n);
 }

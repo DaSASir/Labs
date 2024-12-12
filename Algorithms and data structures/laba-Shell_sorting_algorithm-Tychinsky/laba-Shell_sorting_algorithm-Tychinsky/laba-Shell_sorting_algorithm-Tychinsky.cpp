@@ -14,7 +14,7 @@ int main() {
     PrintArray(array_of_int, 9);
 
     std::cout << std::endl << std::endl;
-    SequenceWithLogarithms(array_of_int, 9);
+    TheInitialSequence(array_of_int, 9);
 
     if (!IsOrderly(array_of_int, 9))
         std::cout << "Массив не упорядочен!!!" << std::endl;
@@ -23,6 +23,7 @@ int main() {
         PrintArray(array_of_int, 9);
         std::cout << std::endl;
     }
+    
     
     //2. [10 баллов] Дополнительно:
     std::cout << "\nВторой этап: \n";
@@ -37,7 +38,7 @@ int main() {
     for (int j = 0; j < 9; j++) {
         time_t start = clock();
 
-        SequenceWithLogarithms(diff_array[j], size[j]);
+        TheSedgwickSequence(diff_array[j], size[j]);
         //TheInitialSequence(copy[j], size[j]);
         //SequenceWithLogarithms(copy[j], size[j]);
         //TheWhipSequence(copy[j], size[j]);
@@ -70,5 +71,6 @@ int main() {
     
     std::cout << average_time[average_time.size() - 1] / (average_time.size() - 1) << "s\n";
     
-
+    
+    return  0;
 }

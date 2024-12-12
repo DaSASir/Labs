@@ -1,4 +1,4 @@
-#pragma once
+п»ї#pragma once
 
 //#1
 void TheInitialSequence(int* a, const int n);
@@ -14,7 +14,7 @@ int** CreateDiffArrays();
 
 void DeleteMatrix(int** a, const int n);
 
-//другие формулы для выбора длин шагов в алгоритме Шелла
+//РґСЂСѓРіРёРµ С„РѕСЂРјСѓР»С‹ РґР»СЏ РІС‹Р±РѕСЂР° РґР»РёРЅ С€Р°РіРѕРІ РІ Р°Р»РіРѕСЂРёС‚РјРµ РЁРµР»Р»Р°
 void SequenceWithLogarithms(int* a, const int n);
 void TheWhipSequence(int* a, const int n);
 void TheSedgwickSequence(int* a, const int n);

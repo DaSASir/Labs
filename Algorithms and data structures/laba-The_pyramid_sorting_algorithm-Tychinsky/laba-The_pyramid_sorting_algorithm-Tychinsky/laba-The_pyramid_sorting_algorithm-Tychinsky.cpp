@@ -28,22 +28,9 @@ int main() {
     //  (экономьте своё время, реализовав вызов сортировок с помощью циклов, а не перезапуском программы или дублированием кода).
     //  Полученные данные в виде отчёта также приложите к ответу.
 
-    for (int i = 10; i <= 1000000; i *= 10) {
-        time_t start, stop;
-        double time = 0;
-        for (int j = 0; j < 3; j++) {
-            std::vector<int> vec = CreateMassive(i);
+    double time = MiddleTimeOfFile();
+    std::cout << std::endl << "Среднее время:  " << time;
 
-            start = clock();
-
-            while(!IsOrderly(vec)) PyramidSorting(vec);
-
-            stop = clock();
-            time += (double)(stop - start) / CLOCKS_PER_SEC;
-        }
-
-        std::cout << "Среднее время размерности " << i << " - " << time << std::endl;
-        
-    }
+    return 0;
 
 }

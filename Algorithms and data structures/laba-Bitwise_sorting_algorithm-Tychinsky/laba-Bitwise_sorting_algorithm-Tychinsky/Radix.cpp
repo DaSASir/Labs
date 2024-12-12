@@ -1,6 +1,8 @@
 ﻿#include <iostream>
 #include <vector>
-#include <assert.h>
+#include <fstream>
+#include <ctime>
+#include <cstdlib>
 #include "Radix.h"
 
 using std::cout;
@@ -27,54 +29,97 @@ bool IsOrderly(const std::vector<int>& mas) {
 }
 
 void BitSorting(std::vector<int>& mas) {
-	assert(mas.size() > 1);
+	int l = 0,
+		r = mas.size() - 1;
 
-	int min_num = GetMin(mas),
-		size = mas.size();
+	while (l <= r) {
+		while (l <= r && mas[l] < 0) l++;
+		while (l <= r && mas[r] >= 0) r--;
 
-	if (min_num < 0)
-		for (int i = 0; i < size; i++)
-			mas[i] -= min_num;
-
-	int max_num = GetMax(mas);
-
-	for (int bit = 0; (1 << bit) <= max_num; bit++) {
-		std::vector<int> array_0, array_1;
-
-		for (int i = 0; i < size; i++) {
-			if (mas[i] & (1 << bit))
-				array_1.push_back(mas[i]);
-			else
-				array_0.push_back(mas[i]);
-		}
-
-		int index = 0;
-		for (int i = 0; i < array_0.size(); i++) {
-			mas[index] = array_0[i];
-			index++;
-		}
-		for (int i = 0; i < array_1.size(); i++) {
-			mas[index] = array_1[i];
-			index++;
+		if (l <= r) {
+			swap(mas[l], mas[r]);
+			l++;
+			r--;
 		}
 	}
 
-	if (min_num < 0)
-		for (int i = 0; i < size; i++)
-			mas[i] += min_num;
+	int mask = 1 << 30;
+	Sorting(mas, 0, r, mask);
+	Sorting(mas, l, (mas.size() - 1), mask);
 }
 
-int GetMax(const std::vector<int>& mas) {
-	int x = mas[0];
-	for (int i = 1; i < mas.size(); i ++)
-		if (x < mas[i])
-			x = mas[i];
-	return x;
+void Sorting(std::vector<int>& mas,
+	const int left, const int right, const int mask) {
+	if (left >= right || mask <= 0) return;
+
+	int l = left,
+		r = right;
+
+	while (l <= r) {
+		while (l <= r && !(mask & mas[l])) l++;
+		while (l <= r && (mask & mas[r])) r--;
+
+		if (l <= r) {
+			swap(mas[l], mas[r]);
+			l++;
+			r--;
+		}
+	}
+	Sorting(mas, left, r, mask >> 1);
+	Sorting(mas, l, right, mask >> 1);
 }
-int GetMin(const std::vector<int>& mas) {
-	int x = mas[0];
-	for (int i = 1; i < mas.size(); i++)
-		if (x > mas[i])
-			x = mas[i];
-	return x;
+
+double MiddleTimeOfFile() {
+	std::ifstream f("C:\\GitHub_Repositories\\Labs\\Algorithms and data structures\\laba-Shell_sorting_algorithm-Tychinsky\\laba-Shell_sorting_algorithm-Tychinsky\\Arrays.txt");
+	if (!f.is_open()) {
+		perror("---File not open!---");
+		exit(-1);
+	}
+
+	int size[] = { 10000 ,10000 ,10000 ,
+				   100000 ,100000 ,100000 ,
+				   1000000 ,1000000 ,1000000 };
+
+	std::vector<double> average_time;
+
+	for (int j = 0; j < 9; j++) {
+		std::vector<int> mas;
+		int element;
+
+		for (int i = 0; i < size[j] && f >> element; i++)
+			mas.push_back(element);
+
+		if (mas.size() != size[j]) {
+			perror("\nProblem in size!!!\n");
+			exit(-1);
+		}
+
+		time_t start = clock();
+
+		BitSorting(mas);
+
+		time_t stop = clock();
+		double time = static_cast<double>(stop - start) / CLOCKS_PER_SEC;
+
+		if (!IsOrderly(mas))
+			cout << "Массив не упорядочен!!!" << j << std::endl;
+		else
+			average_time.push_back(time);
+	}
+
+	cout << "Вывод времени каждого массива:\n";
+	for (int i = 0; i < average_time.size(); i++) {
+		if (i % 3 == 0 && i != 0)
+			cout << "\n";
+
+		cout << average_time[i] << "s ";
+
+	}
+
+	double total_time = 0.0;
+	for (double t : average_time)
+		total_time += t;
+
+	f.close();
+	return (total_time / average_time.size());
 }

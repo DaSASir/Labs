@@ -8,6 +8,7 @@ bool IsOrderly(const std::vector<int>& mas);
 
 void BitSorting(std::vector<int>& mas);
 
-int GetMax(const std::vector<int>& mas);
-int GetMin(const std::vector<int>& mas);
+void Sorting(std::vector<int>& mas,
+	const int left, const int right, const int mask);
 
+double MiddleTimeOfFile();

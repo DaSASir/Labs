@@ -4,87 +4,73 @@
 #include "Boyer-Moore.h"
 
 //#1
-int BoyerMooreSearch(const string main_string, const string substring) {
-	int* substring_cheese = CreateMassiveOfNumbersSubstring(substring);
+std::vector<int> GetTableOfChar(const string substring) {
+    std::vector<int> table(256, -1);
 
-	int i = 0;
-	while (i <= main_string.length() - substring.length()) {
-		int j = substring.length();
-		while (j > 0 && main_string[i + j - 1] == substring[j - 1])
-			j--;
+    for (int i = 0; i < substring.size(); i++)
+        table[substring[i]] = i;
 
-		if (j == 0) break;
-		else if (j == substring.length()) {
-			int k = substring.length();
-			while (k > 0 && main_string[i + j - 1] != substring[k - 1])
-				k--;
-			if (k == 0)
-				i += substring_cheese[substring.length()];
-			else if (k > 0 && main_string[i + j - 1] == substring[k - 1])
-				i += substring_cheese[k - 1];
-		}
-		else if (j < substring.length())
-			i += substring_cheese[j];
-
-	}
-	delete[] substring_cheese;
-	return i;
+    return table;
 }
 
-int* CreateMassiveOfNumbersSubstring(const string substring) {
-	int* massive_cheese = new int[substring.length() + 1];
+int BoyerMooreSearch(const string main_string, const string substring) {
+    if (substring.size() > main_string.size())
+        return -1;
 
-	for (int i = 2; i <= substring.length(); i++)
-		massive_cheese[substring.length() - i] = i - 1;
+    std::vector<int> table_shift = GetTableOfChar(substring);
+    int shift = 0;
 
-	massive_cheese[substring.length() - 1] = substring.length();
-	massive_cheese[substring.length()] = substring.length();
+    while (shift <= (main_string.size() - substring.size())) {
+        int index = substring.size() - 1;
 
-	for (int i = 2; i <= substring.length(); i++) {
-		for (int j = 3; j <= substring.length(); j++)
-			if (substring[substring.length() - i] == substring[substring.length() - j])
-				massive_cheese[substring.length() - j] = massive_cheese[substring.length() - i];
+        while (index >= 0 && substring[index] == main_string[shift + index]) index--;
 
-		if (substring[substring.length() - 1] == substring[substring.length() - i])
-			massive_cheese[substring.length() - 1] = massive_cheese[substring.length() - i];
-	}
+        if (index < 0)
+			return shift;
 
-	return massive_cheese;
-	delete[] massive_cheese;
+		int shift_by_el;
+		if (main_string[shift + index] >= 0 && main_string[shift + index] < 256)
+			shift_by_el = index - table_shift[main_string[shift + index]];
+		else shift_by_el = index + 1;
+
+        (shift_by_el > 0) ? shift += shift_by_el : shift += 1;
+    }
+
+    return -1;
 }
 
 //#2
 std::vector<int> SearchAllOccurrences(const string main_string, const string substring) {
-	std::vector<int> cheese;
+	std::vector<int> occurrences;
 
 	int i = 0;
 	while (i <= main_string.length() - substring.length()) {
 		int entry_index = BoyerMooreSearch(main_string.substr(i), substring);
 
-		cheese.push_back(entry_index + i);
+		occurrences.push_back(entry_index + i);
 
 		i += entry_index + 1;
 	}
 
-	return cheese;
+	return occurrences;
 }
 
 //#3
 std::vector<int> SearchAllOccurrencesInRange(const string main_string, const string substring, const int beginning, const int end) {
-	std::vector<int> cheese;
+	std::vector<int> occurrences;
 
 	if (beginning < 0 || beginning > main_string.length() - substring.length())
-		return cheese;
+		return occurrences;
 
 	int i = beginning;
 	while (i <= end - substring.length()) {
 		int entry_index = BoyerMooreSearch(main_string.substr(i), substring);
 
 		if(entry_index + i < end)
-			cheese.push_back(entry_index + i);
+			occurrences.push_back(entry_index + i);
 
 		i += entry_index + 1;
 	}
 
-	return cheese;
+	return occurrences;
 }

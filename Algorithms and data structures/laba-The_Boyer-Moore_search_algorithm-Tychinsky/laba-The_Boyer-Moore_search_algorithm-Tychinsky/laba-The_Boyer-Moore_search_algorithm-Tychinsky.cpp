@@ -35,4 +35,5 @@ int main() {
     std::cout << std::endl << "findAll(28, 36), ответ: ";
     std::copy(findAll_28_36.begin(), findAll_28_36.end(), std::ostream_iterator<int>(std::cout, " "));
 
+    return 0;
 }

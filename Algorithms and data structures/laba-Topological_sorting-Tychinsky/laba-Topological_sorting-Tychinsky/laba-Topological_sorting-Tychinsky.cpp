@@ -5,20 +5,29 @@
 int main() {
 	setlocale(LC_ALL, "ru");
 
-	int element_count = 7;
+	Graph gg(6);
 
-	BoolMatrix bool_matrix(element_count, element_count, 0);
-	bool_matrix.Print();
+    gg.AddEdge(5, 2);
+    gg.AddEdge(5, 0);
+    gg.AddEdge(4, 0);
+    gg.AddEdge(4, 1);
+    gg.AddEdge(2, 3);
+    gg.AddEdge(3, 1);
 
-	std::vector<int> order;
-	std::vector<bool> visited(element_count, 0);
-	std::vector<std::vector<int>> graph = CreateGraph(bool_matrix);
+    gg.TopSorting();
+    
+    std::cout << "\n";
 
-	TopSort(graph, visited, order, element_count);
+    BoolMatrix m(6, 6, 0);
 
-	std::cout << "\nВывод TopSorting: ";
-	for (int i : order)
-		std::cout << i << " ";
+    m.Inversion(2, 5);
+    m.Inversion(0, 5);
+    m.Inversion(0, 4);
+    m.Inversion(1, 4);
+    m.Inversion(3, 2);
+    m.Inversion(1, 3);
+
+
 
 	return 0;
 }

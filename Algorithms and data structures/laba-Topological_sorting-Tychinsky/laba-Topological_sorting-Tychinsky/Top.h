@@ -2,10 +2,19 @@
 #include "..\..\..\Object-oriented programming\laba-Boolean_Matrix-Tychinsky\laba-Boolean_Matrix-Tychinsky\Matrix.h"
 //#include "..\..\..\Object-oriented programming\laba-List-Tychinsky\laba-List-Tychinsky\List.h"
 
-void DFS(std::vector<std::vector<int>>& graph, 
-	std::vector<bool> visited, std::vector<int>& order, int index);
+class Graph {
+public:
+	Graph(const int vertices);
+	Graph(const BoolMatrix& matrix);
 
-void TopSort(std::vector<std::vector<int>>& graph,
-	std::vector<bool> visited, std::vector<int>& order, const int size);
+	void AddEdge(const int vertices, const int edge);
 
-std::vector<std::vector<int>> CreateGraph(const BoolMatrix& matrix);
+	void DFS(const int index, std::vector<bool>& visited, std::vector<int>& order);
+	void TopSorting();
+
+
+private:
+	int m_vertices;
+	std::vector<std::vector<int>> m_graph;
+	
+};

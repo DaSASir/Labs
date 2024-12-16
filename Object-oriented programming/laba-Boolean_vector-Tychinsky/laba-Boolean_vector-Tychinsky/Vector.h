@@ -30,11 +30,11 @@ public:
 
     class BoolRank;
     BoolRank operator [] (const int index);
-    BoolVector& operator & (const BoolVector& other);
+    BoolVector operator & (const BoolVector& other);
     BoolVector& operator &= (const BoolVector& other);
-    BoolVector& operator | (const BoolVector& other);
+    BoolVector operator | (const BoolVector& other);
     BoolVector& operator |= (const BoolVector& other);
-    BoolVector& operator ^ (const BoolVector& other);
+    BoolVector operator ^ (const BoolVector& other);
     BoolVector& operator ^= (const BoolVector& other);
     BoolVector& operator << (const int value);
     BoolVector& operator >> (const int value);
@@ -69,3 +69,6 @@ private:
     bool& m_cell;
     int m_index;
 };
+
+std::ostream& operator << (std::ostream& stream, const BoolVector& object);
+std::istream& operator >> (std::istream& stream, BoolVector& object);

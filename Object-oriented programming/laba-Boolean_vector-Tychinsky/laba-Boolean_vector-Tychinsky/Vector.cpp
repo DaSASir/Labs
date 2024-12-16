@@ -4,7 +4,6 @@
 #include "assert.h"
 #include "Vector.h"
 
-//конструкторы - деструктор
 BoolVector::BoolVector(){}
 
 BoolVector::BoolVector(const int length, const bool value) : m_length(length) {
@@ -102,7 +101,7 @@ BoolVector::BoolRank BoolVector::operator [] (const int index) {
 	return BoolRank(m_cells[index], index);
 }
 
-BoolVector& BoolVector::operator & (const BoolVector& other) {
+BoolVector BoolVector::operator & (const BoolVector& other) {
 	assert(m_length == other.m_length);
 
 	BoolVector back(m_length,0);
@@ -115,7 +114,7 @@ BoolVector& BoolVector::operator & (const BoolVector& other) {
 BoolVector& BoolVector::operator &= (const BoolVector& other) {
 	return *this = *this & other;
 }
-BoolVector& BoolVector:: operator | (const BoolVector& other) {
+BoolVector BoolVector:: operator | (const BoolVector& other) {
 	assert(m_length == other.m_length);
 
 	BoolVector back(m_length, 0);
@@ -128,7 +127,7 @@ BoolVector& BoolVector:: operator | (const BoolVector& other) {
 BoolVector& BoolVector::operator |= (const BoolVector& other) {
 	return *this = *this | other;
 }
-BoolVector& BoolVector::operator ^ (const BoolVector& other) {
+BoolVector BoolVector::operator ^ (const BoolVector& other) {
 	assert(m_length == other.m_length);
 
 	BoolVector back(m_length, 0);
@@ -243,4 +242,25 @@ bool BoolVector::BoolRank::operator == (const bool value) const {
 }
 bool BoolVector::BoolRank::operator != (const bool value) const {
 	return *this != value;
+}
+
+std::ostream& operator << (std::ostream& stream, const BoolVector& object) {
+	stream << "[ ";
+	for (int i = 0; i < object.CountOfBit(); i++)
+		stream << (object[i] ? "1 " : "0 ");
+	
+	stream << "]\n";
+
+	return stream;
+}
+
+std::istream& operator >> (std::istream& stream, BoolVector& object) {
+	for (int i = 0; i < object.CountOfBit(); i++) {
+		int bit;
+		stream >> bit;
+		assert(bit == 0 || bit == 1);
+		object.Set(bit, i);
+	}
+
+	return stream;
 }

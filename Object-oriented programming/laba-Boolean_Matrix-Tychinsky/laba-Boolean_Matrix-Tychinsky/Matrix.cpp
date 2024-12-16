@@ -2,8 +2,9 @@
 #include "assert.h"
 #include "Matrix.h"
 
-BoolMatrix::BoolMatrix():BoolMatrix(1,8,0) {
-}
+BoolMatrix::BoolMatrix()
+	:BoolMatrix(1,8,0) {}
+
 BoolMatrix::BoolMatrix(const int col_count, const int row_count, const bool value)
 	:m_amount_col(col_count), m_amount_row(row_count) {
 
@@ -57,10 +58,12 @@ void BoolMatrix::Print() const{
 	}
 }
 
-int BoolMatrix::Weight() {
+int BoolMatrix::Weight() const{
 	int weight = 0;
-	for(int i =0 ; i < m_amount_row; i ++)
+
+	for (int i = 0; i < m_amount_row; i++)
 		weight += m_count_vectors[i].WeightVector();
+
 	return weight;
 }
 
@@ -81,7 +84,7 @@ BoolVector BoolMatrix::DisjunctionOfRows() {
 	return back;
 }
 
-int BoolMatrix::Weight(const int index_row) {
+int BoolMatrix::Weight(const int index_row) const{
 	return m_count_vectors[index_row].WeightVector();
 }
 
@@ -118,6 +121,11 @@ BoolMatrix& BoolMatrix::operator = (const BoolMatrix& other) {
 }
 
 BoolVector& BoolMatrix::operator [] (const int index) {
+	assert(index >= 0 && index < m_amount_row);
+	return m_count_vectors[index];
+}
+
+const BoolVector& BoolMatrix::operator [] (const int index) const {
 	assert(index >= 0 && index < m_amount_row);
 	return m_count_vectors[index];
 }
@@ -168,4 +176,24 @@ BoolMatrix BoolMatrix::operator ~ () const {
 		back.m_count_vectors[i].Inversion();
 
 	return back;
+}
+
+std::istream& operator >> (std::istream& stream, BoolMatrix& other) {
+
+	for (int i = 0; i < other.GetAmountOfCols(); i++) 
+		stream >> other[i];
+
+	return stream;
+}
+
+std::ostream& operator << (std::ostream& stream, const BoolMatrix& other) {
+	for (int i = 0; i < other.GetAmountOfCols(); ++i) {
+		stream << "[ ";
+		for (int j = 0; j < other.GetAmountOfRows(); ++j) 
+			stream << other[i][j] << ((j + 1) < other.GetAmountOfRows() ? " " : "");
+		
+		stream << "]\n";
+	}
+
+	return stream;
 }

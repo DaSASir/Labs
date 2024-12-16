@@ -1,5 +1,5 @@
 ﻿#pragma once
-#include "C:\GitHub_Repositories\Labs\Object-oriented programming\laba-Boolean_vector-Tychinsky\laba-Boolean_vector-Tychinsky\Vector.h"
+#include "../../laba-Boolean_vector-Tychinsky/laba-Boolean_vector-Tychinsky/Vector.h"
 
 class BoolMatrix {
 public:
@@ -18,13 +18,13 @@ public:
 	//ввод/вывод в консоль (потоковый);
 	void Print() const;
 	//вес матрицы (количество единичных компонент);
-	int Weight();
+	int Weight() const;
 	//конъюнкция всех строк (возвращает булев вектор);
 	BoolVector ConjunctionOfRows();
 	//дизъюнкция всех строк (возвращает булев вектор);
 	BoolVector DisjunctionOfRows();
 	//вес j-ой строки;
-	int Weight(const int index_row);
+	int Weight(const int index_row) const;
 	//инверсия в i-ой компоненты j-ой строки;
 	void Inversion(const int index_i, const int index_j);
 	//инверсия k компонент j-ой строки, начиная с i-ой компоненты;
@@ -38,6 +38,7 @@ public:
 	BoolMatrix& operator = (const BoolMatrix& other);
 	//получение строки([]);
 	BoolVector& operator [] (const int index);
+	const BoolVector& operator [] (const int index) const;
 	//построчное побитовое умножение(&, &=);
 	BoolMatrix operator & (const BoolMatrix& other) const;
 	BoolMatrix& operator &= (const BoolMatrix& other);
@@ -54,3 +55,6 @@ private:
 	BoolVector* m_count_vectors = nullptr;
 	int m_amount_row, m_amount_col;
 };
+
+std::istream& operator >> (std::istream& stream, BoolMatrix& other);
+std::ostream& operator << (std::ostream& stream, const BoolMatrix& other);

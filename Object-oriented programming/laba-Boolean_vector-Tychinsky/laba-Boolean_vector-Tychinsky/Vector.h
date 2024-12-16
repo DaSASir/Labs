@@ -1,8 +1,5 @@
 ﻿#pragma once
 
-typedef unsigned char UC;
-typedef unsigned int UI;
-
 class BoolVector {
 	static const int cell_size = 8; // sizeof(UC) * 8
 
@@ -15,7 +12,7 @@ public:
 
 	~BoolVector();
 
-    int CountOfBit();
+    int CountOfBit() const;
 
     void SwapVectors(BoolVector& other);
 
@@ -23,7 +20,7 @@ public:
     void Print() const;
 
     void Inversion();
-    void Inversion(int index);
+    void Inversion(const int index);
 
     void Set(const bool value, const int index);
     void Set(const bool value,const int index,const int component_count);
@@ -31,7 +28,8 @@ public:
 
     int WeightVector() const;
 
-    BoolVector& operator [] (const int index);
+    class BoolRank;
+    BoolRank operator [] (const int index);
     BoolVector& operator & (const BoolVector& other);
     BoolVector& operator &= (const BoolVector& other);
     BoolVector& operator | (const BoolVector& other);
@@ -45,44 +43,29 @@ public:
     BoolVector& operator ~ ();
     BoolVector& operator = (const BoolVector& other);
 
-    bool operator == (const BoolVector& other);  
+    bool operator == (const BoolVector& other) const;  
 
 private:
-	UC *m_cells;//ячейки
-	int m_cell_count;//кол-во ячеек
-	int m_length;//длина
-
-    class BoolRank;
+	bool* m_cells = nullptr;//ячейки
+	int m_cell_count = 0;//кол-во ячеек
+	int m_length = 0;//длина
 };
 
 class BoolVector::BoolRank {
 public:
-    
+    BoolRank(bool& cell, const int index);
+
+    BoolRank& operator = (const bool value);
+    BoolRank& operator = (const BoolRank& other);
+    BoolRank& operator |= (const bool value);
+    BoolRank& operator &= (const bool value);
+    BoolRank& operator ^= (const bool value);
+    BoolRank& operator ~ ();
+
+    bool operator == (const bool value) const;
+    bool operator != (const bool value) const;
 
 private:
-    
+    bool& m_cell;
+    int m_index;
 };
-
-/*
-Необходимые методы класса:
-
-
-Необходимые перегрузки:
-- получение компоненты ([ ], см. примечание ниже);
-
-1. Имеет доступ к ячейке, содержащей i-ую компоненту;
-2. Содержит информацию о позиции компоненты в ячейке.
-Т.о., используя битовую маску, объект класса BoolRank может изменять
-значения нужного бита.
-
-Всё, что после этого будет нужно реализовать - перегрузки стандартных операций 
-(присваивание,
-битовое сложение,
-умножение,
-инверсия,
-исключающее ИЛИ.
-Рекомендуется также определить операции сравнения и присваивание, 
-как между объектами класса BoolRank, так и с одним из базовых типов 
-(int/bool/char),
-а также конвертацию типа Rank в один из базовых типов.
-*/

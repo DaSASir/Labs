@@ -1,4 +1,5 @@
 ﻿#include <iostream>
+#include <random>
 #include <fstream>
 #include <time.h>
 #include <cmath>
@@ -7,7 +8,6 @@
 
 int main() {
     setlocale(LC_ALL, "ru");
-
     //1. [10 баллов] Требуется реализовать алгоритм Шелла для сортировки массива.
     int array_of_int[] = { 9,8,7,6,5,4,3,2,1 };
     std::cout << "Первоначальный массив: ";
@@ -38,11 +38,7 @@ int main() {
     for (int j = 0; j < 9; j++) {
         time_t start = clock();
 
-        TheSedgwickSequence(diff_array[j], size[j]);
-        //TheInitialSequence(copy[j], size[j]);
-        //SequenceWithLogarithms(copy[j], size[j]);
-        //TheWhipSequence(copy[j], size[j]);
-        //TheSedgwickSequence(copy[j], size[j]);
+        TheWhipSequence(diff_array[j], size[j]);
 
         time_t stop = clock();
         double time = (double)(stop - start) / CLOCKS_PER_SEC;
@@ -67,10 +63,8 @@ int main() {
     average_time.push_back(0.0);
     for (int i = 0; i < average_time.size() - 1; i++) 
         average_time[average_time.size() - 1] += average_time[i];
-        
     
     std::cout << average_time[average_time.size() - 1] / (average_time.size() - 1) << "s\n";
-    
     
     return  0;
 }

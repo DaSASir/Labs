@@ -1,7 +1,8 @@
 ﻿#include <iostream>
-#include <fstream>//файлы
-#include <time.h>//время
-#include <cmath>//для логарифмов
+#include <random>
+#include <fstream>
+#include <time.h>
+#include <cmath>
 #include <vector>
 #include "Shell.h"
 
@@ -47,7 +48,8 @@ bool IsOrderly(int* mas_cheese, int n) {
 
 //#2
 int** CreateDiffArrays() {
-	srand((unsigned int)time(0));
+	std::random_device rand;
+	std::mt19937 mt(rand());
 
 	FILE* f;
 	fopen_s(&f, "Arrays.txt", "w");
@@ -62,24 +64,27 @@ int** CreateDiffArrays() {
 		cheese[i] = new int[size[i]];
 
 		if (i == 0 || i == 3 || i == 6) {
+			std::uniform_real_distribution<double> dist(-10, 10);
 			for (int j = 0; j < size[i]; j++) {
-				cheese[i][j] = rand() % (10 - (-10) + 1) + (-10);
+				cheese[i][j] = (int)dist(mt);
 				fprintf(f, "%d ", cheese[i][j]);
 			}
 			fprintf(f, "\n\n");
 		}
 				
 		else if (i == 1 || i == 4 || i == 7) {
+			std::uniform_real_distribution<double> dist(-1000, 1000);
 			for (int j = 0; j < size[i]; j++) {
-				cheese[i][j] = rand() % (1000 - (-1000) + 1) + (-1000);
+				cheese[i][j] = (int)dist(mt);
 				fprintf(f, "%d ", cheese[i][j]);
 			}
 			fprintf(f, "\n\n");
 		}
 				
 		else if (i == 2 || i == 5 || i == 8) {
+			std::uniform_real_distribution<double> dist(-100000, 100000);
 			for (int j = 0; j < size[i]; j++) {
-				cheese[i][j] = rand() % (100000 - (-100000) + 1) + (-100000);
+				cheese[i][j] = (int)dist(mt);
 				fprintf(f, "%d ", cheese[i][j]);
 			}
 			fprintf(f, "\n\n");

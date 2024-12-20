@@ -25,6 +25,6 @@ int main() {
     double time = MiddleTimeOfFile();
     std::cout << std::endl << "Среднее время:  " << time;
 
-
+    std::cout << "\n";
     return 0;
 }

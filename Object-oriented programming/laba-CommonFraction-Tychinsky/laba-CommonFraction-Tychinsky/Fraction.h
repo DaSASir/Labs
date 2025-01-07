@@ -1,45 +1,45 @@
 #pragma once
+
 class Fraction {
 public:
     Fraction();
-    Fraction(const int a, const int b);
+    Fraction(const int numerator, const int denominator);
+
+    void SetNumerator(const int value);
+    void SetDenominator(const int value);
+    int GetNumerator() const;
+    int GetDenominator() const;
+
+    Fraction Addition(const Fraction other) const;
+    Fraction Deduction(const Fraction other) const;
+    Fraction Multiplication(const Fraction other) const;
+    Fraction Division(const Fraction other) const;
+
+    Fraction operator + (const Fraction other) const;
+    Fraction operator - (const Fraction other) const;
+    Fraction operator * (const Fraction other) const;
+    Fraction operator / (const Fraction other) const;
+
+    bool operator > (const Fraction other) const;
+    bool operator < (const Fraction other) const;
+    bool operator == (const Fraction other) const;
+    bool operator != (const Fraction other) const;
+
+    void Cut();
+    int GreatestCommonDivisor() const;
 
     void Scan();
     void Print() const;
 
-    bool IsCorrectness();
-
-    Fraction Addition(const Fraction d2) const;
-    Fraction Deduction(const Fraction d2) const;
-    Fraction Multiplication(const Fraction d2) const;
-    Fraction Division(const Fraction d2) const;
-
-    Fraction operator + (const Fraction d2) const;
-    Fraction operator - (const Fraction d2) const;
-    Fraction operator * (const Fraction d2) const;
-    Fraction operator / (const Fraction d2) const;
-
-    bool operator > (const Fraction d2) const;
-    bool operator < (const Fraction d2) const;
-    bool operator == (const Fraction d2) const;
-    bool operator != (const Fraction d2) const;
-
-    int GetNumerator() const;
-    int GetDenominator() const;
-
-    void Cut();
-    int GreatestCommonDivisor();
+    bool IsCorrectness() const;
 
     //собственные функции
-    Fraction operator + (const int cheese);
-    Fraction operator - (const int cheese);
+    Fraction operator + (const int value);
+    Fraction operator - (const int value);
     void WholePartPrint();
 
-    //установление числителя и знаменателя
-    void EstablishmentNumerator(int cheese);
-    void EstablishmentDenominator(int cheese);
-
 private:
+    int m_numerator,
+        m_denominator;
 
-    int numerator, denominator;
 };

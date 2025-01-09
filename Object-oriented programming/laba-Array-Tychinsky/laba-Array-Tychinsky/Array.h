@@ -8,7 +8,7 @@ public:
 
     Array();
     Array(const int size);
-    Array(const T* array, const int size);
+    Array(T* array, const int size);
     Array(const Array<T>& other);
     ~Array();
 
@@ -32,6 +32,8 @@ public:
 
     Iterator begin();
     Iterator end();
+    const Iterator begin() const;
+    const Iterator end() const;
 
     void AddIt(Iterator it, const T& value);
     void DelIt(const Iterator it);
@@ -39,13 +41,13 @@ public:
     
     T& operator[](const int index);
     const T& operator[](const int index) const;
-    Array<T>& operator + (const Array<T>& other);
-    Array<T>& operator + (const T element);
+    Array<T> operator + (const Array<T>& other) const;
+    Array<T> operator + (const T element) const;
     Array<T>& operator += (const Array<T>& other);
     Array<T>& operator += (const T element);
     Array<T>& operator = (const Array<T>& other);
-    bool operator == (const Array<T>& other);
-    bool operator != (const Array<T>& other);
+    bool operator == (const Array<T>& other) const;
+    bool operator != (const Array<T>& other) const;
 
 private:
     T* m_data = nullptr;
@@ -62,10 +64,18 @@ Array<T>::Array(const int size) : m_size(size) {
 }
 
 template <typename T>
-Array<T>::Array(const T* array, const int size) : m_data(array), m_size(size) {}
+Array<T>::Array(T* array, const int size) : m_size(size) {
+    m_data = new T[m_size];
+    for (int i = 0; i < m_size; i++)
+        m_data[i] = array[i];
+}
 
 template <typename T>
-Array<T>::Array(const Array<T>& other) : m_data(other.m_data), m_size(other.m_size) {}
+Array<T>::Array(const Array<T>& other) : m_size(other.m_size) {
+    m_data = new T[m_size];
+    for (int i = 0; i < m_size; i++)
+        m_data[i] = other.m_data[i];
+}
 
 template <typename T>
 Array<T>::~Array() {
@@ -79,7 +89,7 @@ void Array<T>::Print() const {
     cout << "{ ";
     for (int i = 0; i < m_size; i++)
         cout << m_data[i] << " ";
-    cout << "}";
+    cout << "}\n";
 }
 
 template <typename T>
@@ -120,9 +130,8 @@ T Array<T>::GetMin() const {
 //обмен массивов и посик элемента
 template <typename T>
 void Array<T>::Swap(Array<T>& other) {
-    using std::swap;
-    swap(m_size, other.m_size);
-    swap(m_data, other.m_data);
+    std::swap(m_size, other.m_size);
+    std::swap(m_data, other.m_data);
 }
 
 template <typename T>
@@ -148,8 +157,24 @@ void Array<T>::Sorting() {
 
 template <typename T>
 bool Array<T>::AddIndex(const int index, const T& value) {
-    assert(index >= 0 && index < m_size);
-    m_data[index] = value;
+    if (index < 0 || index >= m_size) return false;
+    T* back = new T[m_size + 1];
+
+    for (int i = 0; i < index; i++)
+        back[i] = m_data[i];
+
+    back[index] = value;
+
+    for (int i = index + 1; i < m_size + 1; i++)
+        back[i] = m_data[i - 1];
+
+    delete[] m_data;
+    m_data = back;
+    delete[] back;
+
+    m_size++;
+
+    return true;
 }
 
 //удаление элемента по индексу, значению и всех значений
@@ -158,11 +183,16 @@ bool Array<T>::DelIndex(const int index) {
     if (index < 0 || index >= m_size) return false;
 
     T* back = new T[m_size - 1];
-    for (int i = 0; i < index; i++) back[i] = m_data[i];
-    for (int i = index + 1; i < m_size; i++) back[i - 1] = m_data[i];
+
+    for (int i = 0; i < index; i++) 
+        back[i] = m_data[i];
+    for (int i = index + 1; i < m_size; i++) 
+        back[i - 1] = m_data[i];
 
     delete[] m_data;
     m_data = back;
+    delete[] back;
+
     m_size--;
 
     return true;
@@ -170,15 +200,13 @@ bool Array<T>::DelIndex(const int index) {
 
 template <typename T>
 bool Array<T>::DelValue(const T& value) {
-    for (int i = 0; i < m_size; i++)
-        if (m_data[i] == value) return DelIndex(i);
-    return false;
+    return DelIndex(FindElement(value));
 }
 
 template <typename T>
 void Array<T>::DelAll(const T& value) {
-    for (int i = 0; i < m_size; i++)
-        if (m_data[i] == value) DelIndex(i);
+    while (FindElement(value) != -1) 
+        DelIndex(FindElement(value));
 }
 
 //начальный и последний итератор
@@ -189,6 +217,16 @@ typename Array<T>::Iterator Array<T>::begin() {
 
 template <typename T>
 typename Array<T>::Iterator Array<T>::end() {
+    return m_data + m_size;
+}
+
+template <typename T>
+const typename Array<T>::Iterator Array<T>::begin() const {
+    return m_data;
+}
+
+template <typename T>
+const typename Array<T>::Iterator Array<T>::end() const {
     return m_data + m_size;
 }
 
@@ -207,9 +245,15 @@ void Array<T>::DelIt(const Iterator it) {
 
 template <typename T>
 void Array<T>::DelItRange(const Iterator begin, const Iterator end) {
-    assert(begin >= begin() && end < end() && begin < end);
-    for (Iterator it = begin; it < end; it++)
-        DelIt(it);
+    assert(begin < end);
+
+    Array<T> trash(end - begin);
+
+    for (int i = 0; i < (end - begin); i++)
+        trash[i] = *(begin + i);
+
+    for (int i = 0; i < trash.GetSize(); i++)
+        DelValue(trash[i]);
 }
 
 //перегрузки
@@ -224,10 +268,10 @@ const T& Array<T>::operator[](const int index) const {
 }
 
 template <typename T>
-Array<T>& Array<T>::operator + (const Array<T>& other) {
+Array<T> Array<T>::operator + (const Array<T>& other) const {
     Array<T> back(m_size + other.m_size);
 
-    for (int i = 0 i < m_size; i++)
+    for (int i = 0; i < m_size; i++)
         back.m_data[i] = m_data[i];
     for (int i = 0; i < other.m_size; i++)
         back.m_data[i + m_size] = other.m_data[i];
@@ -236,7 +280,7 @@ Array<T>& Array<T>::operator + (const Array<T>& other) {
 }
 
 template <typename T>
-Array<T>& Array<T>::operator + (const T element) {
+Array<T> Array<T>::operator + (const T element) const {
     Array<T> back(m_size + 1);
     
     for (int i = 0; i < m_size; i++)
@@ -260,7 +304,7 @@ Array<T>& Array<T>::operator += (const T element) {
 
 template <typename T>
 Array<T>& Array<T>::operator = (const Array<T>& other) {
-    if (this == other) return *this;
+    if (*this == other) return *this;
 
     if (m_size != other.m_size) {
         m_size = other.m_size;
@@ -276,7 +320,7 @@ Array<T>& Array<T>::operator = (const Array<T>& other) {
 }
 
 template <typename T>
-bool Array<T>::operator == (const Array<T>& other) {
+bool Array<T>::operator == (const Array<T>& other) const {
     if (m_size != other.m_size) return false;
 
     for (int i = 0; i < m_size; i++)
@@ -287,7 +331,7 @@ bool Array<T>::operator == (const Array<T>& other) {
 }
 
 template <typename T>
-bool Array<T>::operator != (const Array<T>& other) {
+bool Array<T>::operator != (const Array<T>& other) const {
     return !(*this == other);
 }
 
@@ -298,7 +342,7 @@ std::ostream& operator<<(std::ostream& stream, const Array<T>& array) {
     for (int i = 0; i < array.GetSize(); i++) 
         stream << array[i] << " ";
 
-    stream << "}";
+    stream << "}\n";
     return stream;
 }
 

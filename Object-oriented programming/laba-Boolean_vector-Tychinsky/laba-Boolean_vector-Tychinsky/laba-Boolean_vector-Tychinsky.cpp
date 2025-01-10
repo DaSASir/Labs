@@ -5,6 +5,13 @@
 int main() {
     setlocale(LC_ALL, "ru");
     
+    BoolVector B(16, 1);
+    std::cout << B;
+    B >>= 16;
+    std::cout << B;
+
+    return 0;
+
     BoolVector b;
     b.Print();
 
@@ -13,7 +20,7 @@ int main() {
 
     BoolVector b3(7, 0);
     b3.Print();
-
+    
     std::string st = "101010";
     char* arr = new char[6];
     for (int i = 0; i < 6; i++)

@@ -186,22 +186,42 @@ BoolVector& BoolVector::operator ^= (const BoolVector& other) {
 }
 
 BoolVector BoolVector::operator << (const int value) const {
-	//?
-	return *this;
+	BoolVector back(*this);
+	back <<= value;
+	return back;
 }
 
 BoolVector BoolVector::operator >> (const int value) const {
-	//?
-	return *this;
+	BoolVector back(*this);
+	back >>= value;
+	return back;
 }
 
 BoolVector& BoolVector::operator <<= (const int value) {
-	//?
+	assert(value > 0);
+
+	if (value >= m_length) Set(0);
+	else {
+		for (int i = 0; i < m_length - value; i++)
+			Set(BitValue(i), i + value);
+		for (int i = m_length - value; i < m_length; i++)
+			Set(0, i);
+	}
+
 	return *this;
 }
 
 BoolVector& BoolVector::operator >>= (const int value) {
-	//?
+	assert(value > 0);
+
+	if (value >= m_length) Set(0);
+	else {
+		for (int i = m_length - 1; i > value; i--)
+			Set(BitValue(i), i - value);
+		for (int i = value - 1; i >= 0; i--)
+			Set(0, i);
+	}
+
 	return *this;
 }
 
@@ -278,7 +298,7 @@ std::istream& operator>>(std::istream& stream, BoolVector& bv) {
 		stream >> string[i];
 
 	for (int i = 0; i < bv.CountOfBit(); i++)
-		bv.Set(string[i] == '1' ? 1 : 0, i);
+		bv.Set((string[i] == '1') ? 1 : 0, i);
 
 	delete[] string;
 	return stream;

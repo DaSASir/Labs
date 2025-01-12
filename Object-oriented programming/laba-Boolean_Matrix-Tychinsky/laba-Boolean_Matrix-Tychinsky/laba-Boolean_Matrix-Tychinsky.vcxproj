@@ -131,6 +131,7 @@
     <ClCompile Include="Matrix.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\laba-Boolean_vector-Tychinsky\laba-Boolean_vector-Tychinsky\Vector.h" />
     <ClInclude Include="Matrix.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

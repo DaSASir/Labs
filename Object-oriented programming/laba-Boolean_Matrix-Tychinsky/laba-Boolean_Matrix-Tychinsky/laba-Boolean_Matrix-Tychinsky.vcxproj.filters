@@ -26,5 +26,8 @@
     <ClInclude Include="Matrix.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\laba-Boolean_vector-Tychinsky\laba-Boolean_vector-Tychinsky\Vector.h">
+      <Filter>Исходные файлы</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

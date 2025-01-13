@@ -1,10 +1,11 @@
 ﻿#pragma once
 #include "../../laba-Boolean_vector-Tychinsky/laba-Boolean_vector-Tychinsky/Vector.h"
-//#include "C:\GitHub_Repositories\Labs\Object-oriented programming\laba-Boolean_vector-Tychinsky\laba-Boolean_vector-Tychinsky/Vector.h"
+//#include "Vector.h"
+//#include "C:\GitHub_Repositories\Labs\Object-oriented programming\laba-Boolean_vector-Tychinsky\laba-Boolean_vector-Tychinsky\Vector.h"
 
 class BoolMatrix {
 public:
-	BoolMatrix();
+	BoolMatrix() = default;
 	BoolMatrix(const int cols, const int rows);
 	BoolMatrix(const int cols, const int rows, const bool value);
 	BoolMatrix(const char** matrix, const int cols, const int rows);
@@ -44,8 +45,8 @@ public:
 
 private:
 	BoolVector* m_vectors = nullptr;
-	int m_rows = 0, 
-		m_cols = 0;
+	int m_rows = 0;
+	int	m_cols = 0;
 };
 
 std::ostream& operator << (std::ostream& stream, const BoolMatrix& bm);

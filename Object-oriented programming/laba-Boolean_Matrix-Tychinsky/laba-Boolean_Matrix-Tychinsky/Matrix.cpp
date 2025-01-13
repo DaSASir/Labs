@@ -1,10 +1,8 @@
 #include <iostream>
-#include "assert.h"
+#include <cassert>
 #include "Matrix.h"
 
 //конструкторы и деструктор
-BoolMatrix::BoolMatrix() {}
-
 BoolMatrix::BoolMatrix(const int cols, const int rows) : m_cols(cols), m_rows(rows) {
 	assert(cols >= 0 && rows >= 0);
 	m_vectors = new BoolVector[m_rows];
@@ -13,6 +11,7 @@ BoolMatrix::BoolMatrix(const int cols, const int rows) : m_cols(cols), m_rows(ro
 }
 
 BoolMatrix::BoolMatrix(const int cols, const int rows, const bool value) : m_cols(cols), m_rows(rows) {
+	assert(cols >= 0 && rows >= 0);
 	m_vectors = new BoolVector[m_rows];
 	for (int i = 0; i < m_rows; i++)
 		m_vectors[i] = BoolVector(m_cols, value);
@@ -20,7 +19,7 @@ BoolMatrix::BoolMatrix(const int cols, const int rows, const bool value) : m_col
 
 BoolMatrix::BoolMatrix(const char** matrix, const int cols, const int rows) : m_cols(cols), m_rows(rows) {
 	m_vectors = new BoolVector[m_rows];
-	for (int i = 0; i < m_rows; i++) 
+	for (int i = 0; i < m_rows; i++)
 		m_vectors[i] = BoolVector(matrix[i], cols);
 }
 
@@ -35,7 +34,7 @@ BoolMatrix::~BoolMatrix() {
 }
 
 //кол-во строк и столбцов и обмен матриц
-int BoolMatrix :: AmountOfRows() const {
+int BoolMatrix::AmountOfRows() const {
 	return m_rows;
 }
 
@@ -114,5 +113,87 @@ void BoolMatrix::Set(const bool value, const int from, const int row, const int 
 }
 
 //перегрузки
+BoolMatrix& BoolMatrix::operator = (const BoolMatrix& other) {
+	if (this != &other) {
+		m_rows = other.m_rows;
+		m_cols = other.m_cols;
+
+		delete[] m_vectors;
+		m_vectors = new BoolVector[m_rows];
+		for (int i = 0; i < m_rows; i++) 
+			m_vectors[i] = BoolVector(other.m_vectors[i]);
+	}
+	return *this;
+}
+
+BoolVector& BoolMatrix::operator [] (const int index) {
+	assert(index >= 0 && index < m_rows);
+	return m_vectors[index];
+}
+
+const BoolVector& BoolMatrix::operator [] (const int index) const {
+	assert(index >= 0 && index < m_rows);
+	return m_vectors[index];
+}
+
+BoolMatrix BoolMatrix::operator & (const BoolMatrix& other) const {
+	BoolMatrix back(*this);
+	for (int i = 0; i < m_rows; i++)
+		back.m_vectors[i] &= other.m_vectors[i];
+
+	return back;
+}
+
+BoolMatrix& BoolMatrix::operator &= (const BoolMatrix& other) {
+	*this = *this & other;
+	return *this;
+}
+
+BoolMatrix BoolMatrix::operator | (const BoolMatrix& other) const {
+	BoolMatrix back(*this);
+	for (int i = 0; i < m_rows; i++)
+		back.m_vectors[i] |= other.m_vectors[i];
+
+	return back;
+}
+
+BoolMatrix& BoolMatrix::operator |= (const BoolMatrix& other) {
+	*this = *this | other;
+	return *this;
+}
+
+BoolMatrix BoolMatrix::operator ^ (const BoolMatrix& other) const {
+	BoolMatrix back(*this);
+	for (int i = 0; i < m_rows; i++)
+		back.m_vectors[i] ^= other.m_vectors[i];
+
+	return back;
+}
+
+BoolMatrix& BoolMatrix::operator ^= (const BoolMatrix& other) {
+	*this = *this ^ other;
+	return *this;
+}
+
+BoolMatrix BoolMatrix::operator ~ () const {
+	BoolMatrix back(*this);
+	for (int i = 0; i < m_rows; i++)
+		back.m_vectors[i].Inversion();
+
+	return back;
+}
 
 //потоковый ввод и вывод
+std::ostream& operator << (std::ostream& stream, const BoolMatrix& bm) {
+	for (int i = 0; i < bm.AmountOfRows(); i++)
+		stream << bm[i];
+	
+	return stream;
+}
+
+std::istream& operator >> (std::istream& stream, BoolMatrix& bm) {
+	for (int i = 0; i < bm.AmountOfRows(); i++)
+		stream >> bm[i];
+
+	return stream;
+}

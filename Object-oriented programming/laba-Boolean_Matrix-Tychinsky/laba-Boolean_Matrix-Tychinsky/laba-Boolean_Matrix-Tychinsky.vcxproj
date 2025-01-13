@@ -127,6 +127,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\laba-Boolean_vector-Tychinsky\laba-Boolean_vector-Tychinsky\Vector.cpp" />
     <ClCompile Include="laba-Boolean_Matrix-Tychinsky.cpp" />
     <ClCompile Include="Matrix.cpp" />
   </ItemGroup>

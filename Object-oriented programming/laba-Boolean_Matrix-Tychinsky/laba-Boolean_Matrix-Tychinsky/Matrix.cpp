@@ -3,13 +3,6 @@
 #include "Matrix.h"
 
 //конструкторы и деструктор
-BoolMatrix::BoolMatrix(const int cols, const int rows) : m_cols(cols), m_rows(rows) {
-	assert(cols >= 0 && rows >= 0);
-	m_vectors = new BoolVector[m_rows];
-	for (int i = 0; i < m_rows; i++)
-		m_vectors[i] = BoolVector(m_cols);
-}
-
 BoolMatrix::BoolMatrix(const int cols, const int rows, const bool value) : m_cols(cols), m_rows(rows) {
 	assert(cols >= 0 && rows >= 0);
 	m_vectors = new BoolVector[m_rows];
@@ -17,7 +10,7 @@ BoolMatrix::BoolMatrix(const int cols, const int rows, const bool value) : m_col
 		m_vectors[i] = BoolVector(m_cols, value);
 }
 
-BoolMatrix::BoolMatrix(const char** matrix, const int cols, const int rows) : m_cols(cols), m_rows(rows) {
+BoolMatrix::BoolMatrix(char** matrix, const int cols, const int rows) : m_cols(cols), m_rows(rows) {
 	m_vectors = new BoolVector[m_rows];
 	for (int i = 0; i < m_rows; i++)
 		m_vectors[i] = BoolVector(matrix[i], cols);

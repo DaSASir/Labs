@@ -1,14 +1,11 @@
 ﻿#pragma once
 #include "../../laba-Boolean_vector-Tychinsky/laba-Boolean_vector-Tychinsky/Vector.h"
-//#include "Vector.h"
-//#include "C:\GitHub_Repositories\Labs\Object-oriented programming\laba-Boolean_vector-Tychinsky\laba-Boolean_vector-Tychinsky\Vector.h"
 
 class BoolMatrix {
 public:
 	BoolMatrix() = default;
-	BoolMatrix(const int cols, const int rows);
 	BoolMatrix(const int cols, const int rows, const bool value);
-	BoolMatrix(const char** matrix, const int cols, const int rows);
+	BoolMatrix( char** matrix, const int cols, const int rows);
 	BoolMatrix(const BoolMatrix& other);
 	~BoolMatrix();
 

@@ -3,8 +3,13 @@
 
 int main() {
     setlocale(LC_ALL, "ru");
-    List<int> l;
-    l.Print();
+    
+    int* arr = new int[7];
+    for (int i = 0; i < 7; i++)
+        arr[i] = i + 1;
+
+    List<int> l(arr, 7);
+    std::cout << l;
 
     return 0;
 }

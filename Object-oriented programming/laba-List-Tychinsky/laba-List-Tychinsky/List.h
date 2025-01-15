@@ -110,13 +110,15 @@ List<T>::List(): m_head(new Node()), m_tail(new Node()) {
 }
 
 template <typename T>
-List<T>::List(const T* array, int size) : List<T>(), m_size(size) {
+List<T>::List(const T* array, int size) : m_size(size) {
+    List();
     for (int i = 0; i < size; i++)
         AddTail(array[i]);
 }
 
 template <typename T>
-List<T>::List(const List<T>& other) : List<T>(), m_size(other.m_size) {
+List<T>::List(const List<T>& other) : m_size(other.m_size) {
+    List();
     for (Iterator i = other.begin(); i != other.end(); i++)
         AddTail(*i);
 }
@@ -145,9 +147,10 @@ void List<T>::Swap(List<T>& other) {
 //ввод и вывод
 template <typename T>
 void List<T>::Print() const {
-    for (Iterator it = begin(); it != end(); it++)
+    std::cout << "{ ";
+    for (ConstIterator it = begin(); it != end(); it++)
         std::cout << *it << ' ';
-    std::cout << "\n";
+    std::cout << "}\n";
 }
 
 template <typename T>
@@ -155,7 +158,7 @@ void List<T>::Scan() {
     std::cout << "Введиет кол-во элементов: ";
     std::cin >> m_size;
 
-    std::cout << "Введиет элементы:\n";
+    std::cout << "Введите элементы:\n";
     for (int i = 0; i < m_size; i++) {
         T element;
         std::cin >> element;
@@ -382,8 +385,8 @@ List<T>& List<T>::operator+=(const List<T>& other) {
 template <typename U>
 std::ostream& operator<<(std::ostream& stream, const List<U>& list) {
     stream << "[";
-    for (Node<U>* it = list.begin(); it != list.end(); it = it->m_next)
-        stream << *it << " ";
+    for (Node<U>* it = list.m_head->m_next; it != list.m_tail; it = it->m_next)
+        stream << it->m_data << " ";
     stream << "]\n";
 
     return stream;

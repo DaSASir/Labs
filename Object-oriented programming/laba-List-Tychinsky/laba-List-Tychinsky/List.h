@@ -1,29 +1,18 @@
-﻿#include <iostream>
-
-template <typename T>
-class Node {
-    Node(Node* next = nullptr, Node* prev = nullptr)
-        : m_next(next), m_prev(prev) {};
-    Node(const T& value, Node* next = nullptr, Node* prev = nullptr)
-        : m_data(value), m_next(next), m_prev(prev) {};
-
-    T m_data;
-    Node<T>* m_next = nullptr;
-    Node<T>* m_prev = nullptr;
-};
+﻿#pragma once
+#include <iostream>
 
 template <typename T>
 class List {
     struct Node;
 public:
-    template <typename T>
+    template <typename ItemType>
     class TemplateIterator;
     using Iterator = TemplateIterator<T>;
     using ConstIterator = TemplateIterator<const T>;
 
 public:
     List();
-    List(const T* array, int size);
+    List(const T* array, const int size);
     List(const List<T>& other);
     ~List();
 
@@ -76,11 +65,22 @@ private:
 };
 
 template <typename T>
+struct List<T>::Node {
+    Node(Node* next = nullptr, Node* prev = nullptr)
+        : m_next(next), m_prev(prev) {};
+    Node(const T& value, Node* next = nullptr, Node* prev = nullptr)
+        : m_data(value), m_next(next), m_prev(prev) {};
+
+    T m_data;
+    Node* m_next = nullptr;
+    Node* m_prev = nullptr;
+};
+
+template <typename T>
 template <typename ItemType>
 class List<T>::TemplateIterator {
 public:
     TemplateIterator(Node* cell) : m_cell(cell) {}
-    ~TemplateIterator() { delete m_cell; };
 
     ItemType& operator*();
     const ItemType& operator*() const;
@@ -91,16 +91,11 @@ public:
     bool operator==(const TemplateIterator& other) const;
     bool operator!=(const TemplateIterator& other) const;
 
+    Node* GetNode() { return m_cell; };
+
 protected:
     Node* m_cell = nullptr;
 };
-
-template <typename U>
-std::ostream& operator << (std::ostream& stream, const List<U>& list);
-template <typename U>
-std::istream& operator >> (std::istream& stream, List<U>& list);
-
-
 
 //конструкторы и деструктор
 template <typename T>
@@ -110,16 +105,14 @@ List<T>::List(): m_head(new Node()), m_tail(new Node()) {
 }
 
 template <typename T>
-List<T>::List(const T* array, int size) : m_size(size) {
-    List();
+List<T>::List(const T* array, const int size) : List() {
     for (int i = 0; i < size; i++)
         AddTail(array[i]);
 }
 
 template <typename T>
-List<T>::List(const List<T>& other) : m_size(other.m_size) {
-    List();
-    for (Iterator i = other.begin(); i != other.end(); i++)
+List<T>::List(const List<T>& other) : List() {
+    for (ConstIterator i = other.begin(); i != other.end(); i++)
         AddTail(*i);
 }
 
@@ -155,14 +148,17 @@ void List<T>::Print() const {
 
 template <typename T>
 void List<T>::Scan() {
+    Clear();
+
+    int cell_count;
     std::cout << "Введиет кол-во элементов: ";
-    std::cin >> m_size;
+    std::cin >> cell_count;
 
     std::cout << "Введите элементы:\n";
-    for (int i = 0; i < m_size; i++) {
+    for (int i = 0; i < cell_count; i++) {
         T element;
         std::cin >> element;
-        AddTail(T);
+        AddTail(element);
     }
 }
 
@@ -205,8 +201,10 @@ void List<T>::Sorting() {
     for (Iterator it = begin(); it != end(); it++) {
         bool check = 0;
         for (Iterator jt = begin(); jt != end(); jt++)
-            if (*it < *jt)
-                std::swap(it.m_cell->m_data, jt.m_cell->m_data);
+            if (*it < *jt) {
+                std::swap(it.GetNode()->m_data, jt.GetNode()->m_data);
+                check = 1;
+            }
         if (!check) break;
     }
 }
@@ -234,21 +232,24 @@ void List<T>::AddAfterKey(const T& key, const T& value) {
 
 template <typename T>
 void List<T>::AddByIterator(const T& value, Iterator pos) {
-    Node* node = new Node(value, pos.m_cell, pos.m_cell->m_prev);
-    pos.m_cell->m_prev->m_next = node;
-    pos.m_cell->m_prev = node;
+    Node* cell = pos.GetNode();
+    Node* node = new Node(value, cell, cell->m_prev);
+    cell->m_prev->m_next = node;
+    cell->m_prev = node;
     m_size++;
 }   
 
 //удаление элемента из головы, из хвоста, по позиции, после ключа, по итератору
 template <typename T>
 void List<T>::DelHead() {
-    DelByIterator(begin());
+    if(!IsEmpty())
+        DelByIterator(begin());
 }
 
 template <typename T>
 void List<T>::DelTail() {
-    DelByIterator(end());
+    if (!IsEmpty())
+        DelByIterator((end()--));
 }
 
 template <typename T>
@@ -263,9 +264,13 @@ void List<T>::DelFromKey(const T& key) {
 
 template <typename T>
 void List<T>::DelByIterator(Iterator pos) {
-    pos.m_cell->m_pred->m_next = pos.m_cell->m_next;
-    pos.m_cell->m_next->m_prev = pos.m_cell->m_prev;
-    m_size--;
+    if (pos != end()) {
+        Node* node = pos.GetNode();
+        node->m_prev->m_next = node->m_next;
+        node->m_next->m_prev = node->m_prev;
+        delete node;
+        m_size--;
+    }
 }
 
 template <typename T>
@@ -311,12 +316,8 @@ List<T>::Node* List<T>::FindByKey(const T& key) const {
 
 template <typename T> typename
 List<T>::Iterator List<T>::FindByIterator(const T& key) const {
-    Iterator it = begin();
-    for (it = begin(); it < end(); it++)
-        if (*it == key)
-            break;
-
-    return it;
+    Node* node = FindByKey(key);
+    return Iterator(node);
 }
 
 //перегрузки
@@ -324,15 +325,15 @@ template <typename T>
 List<T>& List<T>::operator=(const List<T>& other) {
     if (*this != other) {
         Clear();
-        for (T& value : other)
-            AddTail(value);
+        for (ConstIterator it = other.begin(); it != end(); it++)
+            AddTail(*it);
     }
     return *this;
 }
 
 template <typename T>
 T& List<T>::operator[](const int index) {
-    if (index >= m_size) return;
+    if (index < 0 || index >= m_size) return;
     Node* back = m_head->m_next;
     for (int i = 0; i < index; i++)
         back = back->m_next;
@@ -342,7 +343,7 @@ T& List<T>::operator[](const int index) {
 
 template <typename T>
 const T& List<T>::operator[](const int index) const {
-    if (index >= m_size) return;
+    if (index < 0 || index >= m_size) return;
     Node* back = m_head->m_next;
     for (int i = 0; i < index; i++)
         back = back->m_next;
@@ -382,19 +383,19 @@ List<T>& List<T>::operator+=(const List<T>& other) {
 }
 
 //потоковый ввод и вывод
-template <typename U>
-std::ostream& operator<<(std::ostream& stream, const List<U>& list) {
-    stream << "[";
-    for (Node<U>* it = list.m_head->m_next; it != list.m_tail; it = it->m_next)
-        stream << it->m_data << " ";
-    stream << "]\n";
+template <typename T>
+std::ostream& operator << (std::ostream& stream, const List<T>& list) {
+    stream << "{";
+    for (auto it = list.begin(); it != list.end(); it++)
+        stream << *it << ' ';
+    stream << "}\n";
 
     return stream;
 }
 
-template <typename U>
-std::istream& operator>>(std::istream& stream, List<U>& list) {
-    for (Node<U>* it = list.begin(); it != list.end(); it = it->m_next)
+template <typename T>
+std::istream& operator >> (std::istream& stream, List<T>& list) {
+    for (auto it = list.begin(); it != list.end(); it++)
         stream >> *it;
 
     return stream;

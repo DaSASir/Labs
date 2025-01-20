@@ -2,204 +2,174 @@
 #include <string>
 #include "Plenty.h"
 
-Plenty::Plenty() 
-    : BoolVector(size_table,0), size(0) {}
+//конструкторы и деструктор
+Plenty::Plenty(): BoolVector(size_table, 0) {}
 
-Plenty::Plenty(const char* array) 
-    : BoolVector(size_table,0), size(0) {
-    for(int i =0 ; i < strlen(array); i++)
-        if (!InPlenty(array[i])) {
-            elements[size++] = array[i];
-            Inversion(i);
-        }
+Plenty::Plenty(const char* array): Plenty() {
+    for (int i = 0; array[i] != '\0'; i++)
+        *this += array[i];
 }
 
-Plenty::Plenty(const Plenty& other) 
-    : BoolVector(other), size(other.size) {
-    for (int i = 0; i < size; i++)
-        elements[i] = other.elements[i];
-}
+Plenty::Plenty(const Plenty& other): BoolVector(other){}
 
-Plenty::~Plenty() {
-    ~BoolVector();
-}
+Plenty::~Plenty() {}
 
+//ввод и вывод
 void Plenty::Print() const {
-    using std::cout;
-    cout << "[ ";
-    for (int i = 0; i < size; i++)
-        cout << elements[i] << " ";
-    cout << "]" << std::endl;
+    std::cout << "{ ";
+    for (int i = 0; i < size_table; i++) 
+        if (BitValue(i)) 
+            std::cout << static_cast<char>(i + start_table) << " ";
+    std::cout << "}\n";
 }
 
 void Plenty::Scan() {
-    std::string s;
-    std::cout << "Введите символы: ";
-    std::cin >> s;
-
-    size = 0;
-
-    for (int i = 0; i < s.length(); i++)
-        if (!InPlenty(s[i]))
-            elements[size++] = s[i];
+    std::string str;
+    std::cout << "введите символы: \n";
+    std::cin >> str;
+    for (int i = 0; i < str.length(); i++)
+        if (str[i] >= start_table && str[i] <= end_table)
+            Set(1, str[i] - start_table);
 }
 
+//проверка наличия элемента в множестве и получение мощности множества
 bool Plenty::InPlenty(const char element) const {
-    for (int i = 0; i < size; i++)
-        if (elements[i] == element)
-            return true;
-
-    return false;
+    if (element < start_table && element >= end_table)
+        return false;
+    return BitValue(element - start_table);
 }
 
+int Plenty::Capacity() const{
+    int count = 0; 
+    for (int i = 0; i < size_table; i++)
+        if (BitValue(i))
+            count++;
+    return count;
+}
+
+//поиск максимального/минимального элемента множества
 char Plenty::MaxElement() const {
-    if (size == 0)
-        return '\0';
-
-    char max = elements[0];
-    for (int i = 1; i < size; i++)
-        if (max < elements[i])
-            max = elements[i];
-
-    return max;
+    for (int i = size_table - 1; i >= 0; i--)
+        if (BitValue(i))
+            return static_cast<char>(i + start_table);
 }
 
 char Plenty::MinElement() const {
-    if (size == 0)
-        return '\0';
-
-    char min = elements[0];
-    for (int i = 1; i < size; i++)
-        if (min > elements[i])
-            min = elements[i];
-
-    return min;
+    for (int i = 0; i < size_table; i++)
+        if (BitValue(i))
+            return static_cast<char>(i + start_table);
 }
 
-int Plenty::Capacity() {
-    return size;
+//перегрузки
+Plenty Plenty::operator ~ () const {
+    Plenty back(*this);
+    back.Inversion();
+    return back;
 }
 
-Plenty Plenty::operator=(const Plenty& other) {
-    if (this != &other) {
-        BoolVector::operator=(other);
-        size = other.size;
-        for (int i = 0; i < size; i++)
-            elements[i] = other.elements[i];
-    }
-    
+Plenty& Plenty::operator = (const Plenty& other) {
+    BoolVector::operator = (other);
     return *this;
 }
 
-bool Plenty::operator==(const Plenty& other) {
-    return BoolVector::operator==(other);
+Plenty Plenty::operator | (const Plenty& other) const {
+    Plenty back(*this);
+    back |= other;
+    return back;
 }
 
-bool Plenty::operator!=(const Plenty& other) {
+Plenty& Plenty::operator |= (const Plenty& other) {
+    for (int i = 0; i < size_table; i++) 
+        if (i < other.size_table) 
+            Set(BitValue(i) || other.BitValue(i), i);
+
+    return *this;
+}
+
+Plenty Plenty::operator & (const Plenty& other) const {
+    Plenty back(*this);
+    back &= other;
+    return back;
+}
+
+Plenty& Plenty::operator &= (const Plenty& other) {
+    for (int i = 0; i < size_table; i++) {
+        if (i < other.size_table)
+            Set(BitValue(i) && other.BitValue(i), i);
+        else
+            Set(0, i);
+    }
+    return *this;
+}
+
+Plenty Plenty::operator / (const Plenty& other) const {
+    Plenty back(*this);
+    back /= other;
+    return back;
+}
+
+Plenty& Plenty::operator /= (const Plenty& other) {
+    for (int i = 0; i < size_table; i++) 
+        if (i < other.size_table && other.BitValue(i)) 
+            Set(0, i);
+
+    return *this;
+}
+
+Plenty Plenty::operator + (const char value) const {
+    Plenty back(*this);
+    back += value;
+    return back;
+}
+
+Plenty& Plenty::operator += (const char value) {
+    Set(1, value - start_table);
+    return *this;
+}
+
+Plenty Plenty::operator - (const char value) const {
+    Plenty back(*this);
+    back -= value;
+    return back;
+}
+
+Plenty& Plenty::operator -= (const char value) {
+    Set(0, value - start_table);
+    return *this;
+}
+
+bool Plenty::operator == (const Plenty& other) const {
+    return BoolVector::operator == (other);
+}
+
+bool Plenty::operator != (const Plenty& other) const {
     return !(*this == other);
 }
 
-Plenty Plenty::operator|(const Plenty& other) const {
-    Plenty back = *this;
-    for (int i = 0; i < other.size; i++)
-        if (!InPlenty(other.elements[i]) && back.size < size_table) {
-            back.elements[back.size++] = other.elements[i];
-            back.Inversion(i);
-        }
-
-    return back;
-}
-
-Plenty Plenty::operator|=(const Plenty& other) {
-    *this = *this | other;
-    return *this;
-}
-
-Plenty Plenty::operator&(const Plenty& other) const {
-    Plenty back;
-    for (int i = 0; i < other.size; i++)
-        if (InPlenty(other.elements[i])) 
-            back.elements[back.size++] = elements[i];
-
-    return back;
-}
-
-Plenty Plenty::operator&=(const Plenty& other) {
-    *this = *this & other;
-    return *this;
-}
-
-Plenty Plenty::operator/(const Plenty& other) const {
-    Plenty back;
-    for (int i = 0; i < other.size; i++)
-        if (!InPlenty(other.elements[i]))
-            back.elements[back.size++] = elements[i];
-
-    return back;
-}
-
-Plenty Plenty::operator/=(const Plenty& other) {
-    *this = *this / other;
-    return *this;
-}
-
-Plenty Plenty::operator~() {
-    Plenty back;
-    for (char el = start_table; el < size_table; el++)
-        if (!InPlenty(el)) {
-            back.elements[back.size++] = el;
-            back.Inversion((int)el);
-        }
-   
-    return back;
-}
-
-Plenty Plenty::operator+(const char value) const {
-    Plenty back = *this;
-    if (!InPlenty(value)) {
-        back.elements[back.size++] = value;
-        back.Inversion((int)value);
-    }
-    return back;
-}
-
-Plenty Plenty::operator+=(const char value) {
-    *this = *this + value;
-    return *this;
-}
-
-Plenty Plenty::operator-(const char value) const {
-    Plenty back;
-    for (int i = 0; i < size; i++) 
-        if (elements[i] != value) {
-            back.elements[back.size++] = elements[i];
-            back.Inversion(i);
-        }
-            
-    return back;
-}
-
-Plenty Plenty::operator-=(const char value) {
-    *this = *this - value;
-    return *this;
-}
-
-std::ostream& operator<<(std::ostream& stream, const Plenty& other) {
+//потоковый ввод и вывод
+std::ostream& operator << (std::ostream& stream, const Plenty& set) {
     stream << "{ ";
-    for (int i = 0; i < other.size; i++) 
-        stream << other.elements[i] << " ";
-
-    stream << "}";
+    for (int i = 0; i < set.size_table; i++)
+        if (set.GetBitBV(i))
+            stream << static_cast<char>(i + set.start_table) << " ";
+    stream << "}\n";
     return stream;
 }
 
-std::istream& operator>>(std::istream& stream, Plenty& other) {
-    std::string s;
-    stream >> s;
+std::istream& operator >> (std::istream& stream, Plenty& set) {
+    std::string str;
+    stream >> str;
+    for (int i = 0; i < str.length(); i++)
+        if (str[i] >= set.start_table && str[i] <= set.end_table)
+            set.SetBit(1, str[i] - set.start_table);
+    return stream;
+}
 
-    other.size = 0;
+//доп функции
+bool Plenty::GetBitBV(const int index) const {
+    return BitValue(index);
+}
 
-    for (int i = 0; i < s.length(); i++)
-        if (!other.InPlenty(s[i]))
-            other.elements[other.size++] = s[i];
+void Plenty::SetBit(const bool bit, const int index) {
+    Set(bit, index);
 }

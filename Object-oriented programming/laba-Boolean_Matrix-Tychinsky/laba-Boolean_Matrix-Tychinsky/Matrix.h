@@ -17,8 +17,8 @@ public:
 	void Print() const;
 	void Scan();
 
-	BoolVector ConjunctionOfRows();
-	BoolVector DisjunctionOfRows();
+	BoolVector ConjunctionOfRows() const;
+	BoolVector DisjunctionOfRows() const;
 
 	int Weight() const;
 	int Weight(const int row) const;

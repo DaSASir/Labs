@@ -7,35 +7,26 @@
 BoolVector::BoolVector() {}
 
 BoolVector::BoolVector(const int size) : m_length(size) {
-	m_cell_count = m_length / CellSize;
-	if (m_length % CellSize != 0)
-		m_cell_count++;
-	m_cells = new Cell[m_cell_count];
-}
-
-BoolVector::BoolVector(const int length, const bool value) : m_length(length) {
-	m_cell_count = m_length / CellSize;
-	if (m_length % CellSize != 0)
-		m_cell_count++;
-	m_cells = new Cell[m_cell_count];
-
-	Set(value ? 1 : 0);
-}
-
-BoolVector::BoolVector(const char* array, const int size) : m_length(size) {
 	assert(size >= 0);
 	m_cell_count = m_length / CellSize;
 	if (m_length % CellSize != 0)
 		m_cell_count++;
 	m_cells = new Cell[m_cell_count];
-	
+	for (int i = 0; i < m_cell_count; i++)
+		m_cells[i] = 0;
+}
+
+BoolVector::BoolVector(const int length, const bool value) : BoolVector(length) {
+	Set(value ? 1 : 0);
+}
+
+BoolVector::BoolVector(const char* array, const int size) : BoolVector(size) {
+	assert(size >= 0);
 	for (int i = 0; i < size; i++)
 		Set(array[i] == '1' ? 1 : 0, i);
 }
 
-BoolVector::BoolVector(const BoolVector& other) : m_length(other.m_length), m_cell_count(other.m_cell_count) {
-	m_cells = new Cell[m_cell_count];
-
+BoolVector::BoolVector(const BoolVector& other) : BoolVector(other.m_length) {
 	for (int i = 0; i < m_cell_count; i++)
 		m_cells[i] = other.m_cells[i];
 }
@@ -55,18 +46,13 @@ void BoolVector::Print() const {
 }
 
 void BoolVector::Scan() {
-	using std::cout;
-	using std::cin;
+	std::cout << "\nВведите булев вектор длины = " << m_length << ":\n";
 
-	cout << "\nВведите булев вектор длины = " << m_length << ":\n";
-	char* string = new char[m_length];
-	for (int i = 0; i < m_length; i++)
-		cin >> string[i];
-
-	for (int i = 0; i < m_length; i++)
-		Set(string[i] == '1' ? 1 : 0, i);
-
-	delete[] string;
+	bool bit;
+	for (int i = 0; i < m_length; i++) {
+		std::cin >> bit;
+		Set(bit, i);
+	}
 }
 
 //получения кол-во битов (длины) вектора, кол-ва ячеек, значение бита и веса вектора (кол-во 1)
@@ -112,8 +98,8 @@ void BoolVector::Inversion(const int index) {
 
 //вставка битов
 void BoolVector::Set(const bool value) {
-	for (int i = 0; i < m_cell_count; i++)
-		m_cells[i] = (!value) ? 0 : ~0;
+	for (int i = 0; i < m_length; i++)
+		Set(value, i);
 }
 
 void BoolVector::Set(const bool value, const int index) {
@@ -125,8 +111,8 @@ void BoolVector::Set(const bool value, const int index) {
 }
 
 void BoolVector::Set(const bool value, const int index, const int component_count) {
-	for (int i = 0; i < component_count; i++) 
-		Set(index + i, value);
+	for (int i = 0; i < component_count; i++)
+		Set(value, index + i);
 }
 
 //маска
@@ -232,7 +218,8 @@ BoolVector BoolVector::operator ~ () const {
 }
 
 BoolVector& BoolVector::operator = (const BoolVector& other) {
-	assert(*this != other);
+	if (*this == other) 
+		return *this;
 
 	m_length = other.m_length;
 	m_cell_count = other.m_cell_count;
@@ -293,13 +280,11 @@ std::ostream& operator<<(std::ostream& stream, const BoolVector& bv) {
 }
 
 std::istream& operator>>(std::istream& stream, BoolVector& bv) {
-	char* string = new char[bv.CountOfBit()];
-	for (int i = 0; i < bv.CountOfBit(); i++)
-		stream >> string[i];
+	for (int i = 0; i < bv.CountOfBit(); i++) {
+		bool bit;
+		stream >> bit;
+		bv.Set(bit, i);
+	}
 
-	for (int i = 0; i < bv.CountOfBit(); i++)
-		bv.Set((string[i] == '1') ? 1 : 0, i);
-
-	delete[] string;
 	return stream;
 }

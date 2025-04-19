@@ -5,43 +5,17 @@
 int main() {
     setlocale(LC_ALL, "ru");
     
-    BoolVector B(16, 1);
-    std::cout << B;
-    B >>= 16;
-    std::cout << B;
+    constexpr int size_bv = 13;
 
-    return 0;
-
-    BoolVector b;
-    b.Print();
-
-    BoolVector b2(8);
-    b2.Print();
-
-    BoolVector b3(7, 0);
-    b3.Print();
+    BoolVector B(size_bv, 1);
     
-    std::string st = "101010";
-    char* arr = new char[6];
-    for (int i = 0; i < 6; i++)
-        arr[i] = st[i];
-    BoolVector b4(arr, 6);
-    b4.Print();
+    std::cout << "Count of cell: " << B.CountOfCell() << std::endl;
+    std::cout << "Count of bit: " << B.CountOfBit() << std::endl;
 
-    BoolVector b5(b2);
-    b5.Print();
-    
-    std::cin >> b2;
-    std::cout << b2;
-    //b2.Scan();
-    //b2.Print();
+    std::cout << "Vector: " << B; B.Print();
+    std::cout << "Weight: " << B.WeightVector();
 
-    std::cout << "CountOfBit b3 = " << b3.CountOfBit() << "\n";
-    std::cout << "CountOfCell b3 = " << b3.CountOfCell() << "\n";
-    std::cout << "WeightVector b3 = " << b3.WeightVector() << "\n";
 
-    b3.Inversion(2);
-    b3.Print();
 
     return 0;
 }

@@ -2,6 +2,8 @@
 #include <cassert>
 #include "Matrix.h"
 
+#include <algorithm>
+
 //конструкторы и деструктор
 BoolMatrix::BoolMatrix(const int cols, const int rows, const bool value) : m_cols(cols), m_rows(rows) {
 	assert(cols >= 0 && rows >= 0);
@@ -23,6 +25,7 @@ BoolMatrix::BoolMatrix(const BoolMatrix& other) : m_cols(other.m_cols), m_rows(o
 }
 
 BoolMatrix::~BoolMatrix() {
+	std::cout << "DELETE\n";
 	delete[] m_vectors;
 }
 
@@ -55,14 +58,14 @@ void BoolMatrix::Scan() {
 }
 
 //конъюкция и дизъюнкция всех строк
-BoolVector BoolMatrix::ConjunctionOfRows() {
+BoolVector BoolMatrix::ConjunctionOfRows() const {
 	BoolVector back(m_vectors[0]);
 	for (int i = 1; i < m_rows; i++) 
 		back &= m_vectors[i];
 	return back;
 }
 
-BoolVector BoolMatrix::DisjunctionOfRows() {
+BoolVector BoolMatrix::DisjunctionOfRows() const {
 	BoolVector back(m_vectors[0]);
 	for (int i = 1; i < m_rows; i++)
 		back |= m_vectors[i];
@@ -72,7 +75,7 @@ BoolVector BoolMatrix::DisjunctionOfRows() {
 //вес матрицы и строки
 int BoolMatrix::Weight() const {
 	int weight = 0;
-	for (int i = 0; i < m_cols; i++)
+	for (int i = 0; i < m_rows; i++)
 		weight += m_vectors[i].WeightVector();
 	return weight;
 }
@@ -114,7 +117,7 @@ BoolMatrix& BoolMatrix::operator = (const BoolMatrix& other) {
 		delete[] m_vectors;
 		m_vectors = new BoolVector[m_rows];
 		for (int i = 0; i < m_rows; i++) 
-			m_vectors[i] = BoolVector(other.m_vectors[i]);
+			m_vectors[i] = other.m_vectors[i];
 	}
 	return *this;
 }
@@ -138,7 +141,7 @@ BoolMatrix BoolMatrix::operator & (const BoolMatrix& other) const {
 }
 
 BoolMatrix& BoolMatrix::operator &= (const BoolMatrix& other) {
-	*this = *this & other;
+	(*this & other).Swap(*this);
 	return *this;
 }
 

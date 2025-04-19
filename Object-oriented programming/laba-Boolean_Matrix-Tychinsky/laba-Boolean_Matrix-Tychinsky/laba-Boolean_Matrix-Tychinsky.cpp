@@ -1,26 +1,37 @@
 ﻿#include <iostream>
 #include "Matrix.h"
 
+#include <array>
+
 int main() {
 	setlocale(LC_ALL, "ru");
 
-	char** mat = new char*[8];
-	for (int i = 0; i < 8; i++) {
-		mat[i] = new char[8];
-		for (int j = 0; j < 8; j++)
+	//std::array<std::array<char, 8>, 8> mat2;
+	//mat2.size();
+
+	constexpr int n = 4;
+	constexpr int m = 2;
+	char mat[n][m];
+	char* rows[n];
+	for (int i = 0; i < n; i++) {
+		rows[i] = &mat[i][0];
+		for (int j = 0; j < m; j++)
 			mat[i][j] = '1';
 	}
 
 	BoolMatrix m1;
-	BoolMatrix m2(8, 8, 1);
-	BoolMatrix m3(mat, 8, 8);
+	BoolMatrix m2(m, n, 1);
+	BoolMatrix m3(&rows[0], m, n);
 	BoolMatrix m4(m2);
 
-	//std::cout << m1  << "\n" << m2  << "\n" << m3 << "\n" << m4 << "\n";
 
-	m3.Inversion(3, 3, 7);
+	std::cout << "-----\n";
+	m3 &= m2;
+	std::cout << "-----\n";
+
+	m2.Print();
 	m3.Print();
-	std::cout << m3[3];
+	std::cout << "Weight: " << m3.Weight() << std::endl;
 
 	return 0;
 }

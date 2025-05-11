@@ -21,10 +21,22 @@
     <ClCompile Include="Top.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\Object-oriented programming\laba-Boolean_Matrix-Tychinsky\laba-Boolean_Matrix-Tychinsky\Matrix.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Object-oriented programming\laba-List-Tychinsky\laba-List-Tychinsky\List.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Top.h">
       <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Object-oriented programming\laba-Boolean_Matrix-Tychinsky\laba-Boolean_Matrix-Tychinsky\Matrix.h">
+      <Filter>Исходные файлы</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Object-oriented programming\laba-List-Tychinsky\laba-List-Tychinsky\List.h">
+      <Filter>Исходные файлы</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

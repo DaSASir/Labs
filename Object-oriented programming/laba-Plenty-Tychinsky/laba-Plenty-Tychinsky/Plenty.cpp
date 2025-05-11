@@ -79,11 +79,8 @@ Plenty Plenty::operator | (const Plenty& other) const {
 }
 
 Plenty& Plenty::operator |= (const Plenty& other) {
-    for (int i = 0; i < size_table; i++) 
-        if (i < other.size_table) 
-            Set(BitValue(i) || other.BitValue(i), i);
-
-    return *this;
+    BoolVector::operator|=(other);
+    return *this;    
 }
 
 Plenty Plenty::operator & (const Plenty& other) const {
@@ -93,12 +90,7 @@ Plenty Plenty::operator & (const Plenty& other) const {
 }
 
 Plenty& Plenty::operator &= (const Plenty& other) {
-    for (int i = 0; i < size_table; i++) {
-        if (i < other.size_table)
-            Set(BitValue(i) && other.BitValue(i), i);
-        else
-            Set(0, i);
-    }
+    BoolVector::operator&=(other);
     return *this;
 }
 
@@ -109,10 +101,7 @@ Plenty Plenty::operator / (const Plenty& other) const {
 }
 
 Plenty& Plenty::operator /= (const Plenty& other) {
-    for (int i = 0; i < size_table; i++) 
-        if (i < other.size_table && other.BitValue(i)) 
-            Set(0, i);
-
+    BoolVector::operator&=(~other);
     return *this;
 }
 

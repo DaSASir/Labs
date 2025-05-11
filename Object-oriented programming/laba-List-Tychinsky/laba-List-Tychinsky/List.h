@@ -1,5 +1,6 @@
 ﻿#pragma once
 #include <iostream>
+#include "assert.h"
 
 template <typename T>
 class List {
@@ -47,6 +48,9 @@ public:
     T FindMax() const;
     T FindMin() const;
 
+    ConstIterator FindMaxIt() const;
+    ConstIterator FindMinIt() const;
+
     Node* FindByKey(const T& key) const;
     Iterator FindByIterator(const T& key) const;
 
@@ -68,6 +72,7 @@ template <typename T>
 struct List<T>::Node {
     Node(Node* next = nullptr, Node* prev = nullptr)
         : m_next(next), m_prev(prev) {};
+
     Node(const T& value, Node* next = nullptr, Node* prev = nullptr)
         : m_data(value), m_next(next), m_prev(prev) {};
 
@@ -90,6 +95,9 @@ public:
     TemplateIterator operator--(int);
     bool operator==(const TemplateIterator& other) const;
     bool operator!=(const TemplateIterator& other) const;
+
+    TemplateIterator operator += (const int amount);
+    TemplateIterator operator -= (const int amount);
 
     Node* GetNode() { return m_cell; };
 
@@ -222,7 +230,8 @@ void List<T>::AddTail(const T& value) {
 
 template <typename T>
 void List<T>::AddToPosition(const int pos, const T& value) {
-    AddByIterator(value, begin() + pos);
+    assert(pos >= 0 && pos < m_size);
+    AddByIterator(value, (begin() += pos));
 }
 
 template <typename T>
@@ -249,12 +258,13 @@ void List<T>::DelHead() {
 template <typename T>
 void List<T>::DelTail() {
     if (!IsEmpty())
-        DelByIterator((end()--));
+        DelByIterator((--end()));
 }
 
 template <typename T>
 void List<T>::DelFromPosition(const int pos) {
-    DelByIterator(begin() + pos);
+    assert(pos >= 0 && pos < m_size);
+    DelByIterator(begin() += pos);
 }
 
 template <typename T>
@@ -275,7 +285,7 @@ void List<T>::DelByIterator(Iterator pos) {
 
 template <typename T>
 void List<T>::DelRange(Iterator from, Iterator to) {
-    for (Iterator it = from; it < to; it++)
+    for (Iterator it = from; it != to; it++)
         DelByIterator(it);
 }
 
@@ -285,7 +295,7 @@ T List<T>::FindMax() const {
     if (m_size <= 0) return 0;
 
     T max = m_head->m_next->m_data;
-    for (Iterator it = begin(); it != end(); it++) 
+    for (ConstIterator it = begin(); it != end(); it++)
         if (*it > max)
             max = *it;
 
@@ -297,11 +307,31 @@ T List<T>::FindMin() const {
     if (m_size <= 0) return 0;
 
     T min = m_head->m_next->m_data;
-    for (Iterator it = begin(); it != end(); it++)
+    for (ConstIterator it = begin(); it != end(); it++)
         if (*it < min)
             min = *it;
 
     return min;
+}
+
+template <typename T> typename
+List<T>::ConstIterator List<T>::FindMaxIt() const {
+    auto i = begin();
+    for (auto it = begin(); it != end(); it++) 
+        if (*it > *i)
+            i = it;
+
+    return i;
+}
+
+template <typename T> typename
+List<T>::ConstIterator List<T>::FindMinIt() const {
+    auto i = begin();
+    for (auto it = begin(); it != end(); it++)
+        if (*it < *i)
+            i = it;
+
+    return i;
 }
 
 //нахождение ячейки и итератора по элементу
@@ -325,7 +355,7 @@ template <typename T>
 List<T>& List<T>::operator=(const List<T>& other) {
     if (*this != other) {
         Clear();
-        for (ConstIterator it = other.begin(); it != end(); it++)
+        for (ConstIterator it = other.begin(); it != other.end(); it++)
             AddTail(*it);
     }
     return *this;
@@ -333,7 +363,7 @@ List<T>& List<T>::operator=(const List<T>& other) {
 
 template <typename T>
 T& List<T>::operator[](const int index) {
-    if (index < 0 || index >= m_size) return;
+    assert(index >= 0 && index < m_size);
     Node* back = m_head->m_next;
     for (int i = 0; i < index; i++)
         back = back->m_next;
@@ -343,7 +373,7 @@ T& List<T>::operator[](const int index) {
 
 template <typename T>
 const T& List<T>::operator[](const int index) const {
-    if (index < 0 || index >= m_size) return;
+    assert(index >= 0 && index < m_size);
     Node* back = m_head->m_next;
     for (int i = 0; i < index; i++)
         back = back->m_next;
@@ -356,7 +386,7 @@ bool List<T>::operator==(const List<T>& other) const {
     if (m_size != other.m_size) return false;
     if (m_head == other.m_head) return true;
 
-    for(Iterator it = begin(), oit = other.begin(); it != end(); it++, oit++)
+    for(ConstIterator it = begin(), oit = other.begin(); it != end(); it++, oit++)
         if (*it != *oit) return false;
 
     return true;
@@ -376,7 +406,7 @@ List<T> List<T>::operator+(const List<T>& other) const {
 
 template <typename T>
 List<T>& List<T>::operator+=(const List<T>& other) {
-    for (Iterator it = other.begin(); it != other.end(); it++)
+    for (ConstIterator it = other.begin(); it != other.end(); it++)
         this->AddTail(*it);
 
     return *this;
@@ -459,4 +489,22 @@ template <typename T>
 template <typename ItemType>
 bool List<T>::TemplateIterator<ItemType>::operator!=(const TemplateIterator& other) const {
     return (m_cell != other.m_cell);
+}
+
+template <typename T>
+template <typename ItemType>
+typename List<T>::template
+TemplateIterator<ItemType> List<T>::TemplateIterator<ItemType>::operator += (const int amount) {
+    for (int i = 0; i < amount; i++)
+        m_cell = m_cell->m_next;
+    return *this;
+}
+
+template <typename T>
+template <typename ItemType>
+typename List<T>::template
+TemplateIterator<ItemType> List<T>::TemplateIterator<ItemType>::operator -= (const int amount) {
+    for (int i = 0; i < amount; i++)
+        m_cell = m_cell->m_prev;
+    return *this;
 }

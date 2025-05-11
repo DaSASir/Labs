@@ -1,23 +1,70 @@
 ﻿#include <iostream>
+#include <vector>
 #include "Array.h"
+
+//найти само встречабщийся элемент(выдаем первый)
+template <typename T>
+Array<T> fromStdVector(std::initializer_list<T> list)
+{
+    return Array<T>(list.begin(), list.size());
+}
+
+template <typename T>
+T FindMostPopularEl(const Array<T>& array) {
+    if (array.GetSize() == 0) {
+        std::cerr << "Ошибка йоу!!! размер массива не может быть равен нулю" << std::endl;
+        return 0;
+    }
+    
+    Array<T> foo(array);
+
+    int most = 0;
+    int count1 = 0;
+
+    for (int i = 0; i < foo.GetSize(); i++) {
+        int count2 = 0;
+        while (foo.DelValue(array[i])) 
+            count2++;
+
+        if (count2 > count1) {
+            most = i;
+            count1 = count2;
+        }
+
+    }
+
+    return array[most];
+}
 
 int main() {
     setlocale(LC_ALL, "ru");
+    
+    std::cout << "\nElement:" << FindMostPopularEl(Array<int>(0));
+    std::cout << "\nElement:" << FindMostPopularEl(fromStdVector({ "a","a","b", "b"}));
 
-    Array<int> boo(5);
-    for (int i = 0; i < 5; i++) 
-        boo[i] = i;
-    boo[0] = 3;
-    boo[1] = 3;
-    std::cout << boo;
-    const Array<int>::Iterator it = boo.begin();
-    const Array<int>::Iterator it2 = boo.begin() + 2;
-    const Array<int>::Iterator it3 = boo.end();
-    boo.DelItRange(it, it3);
     
 
-    std::cout << boo;
+    int* sss = new int[6];
+    std::vector<int> vec = { 1 , 1 ,2 ,3 ,4 , 1 };
+    for (int i = 0; i < vec.size(); i++)
+        sss[i] = vec[i];
 
+
+    std::cout << "\nElement:" << FindMostPopularEl(Array<int>(sss, vec.size()));
+
+
+
+    //Array<int> R1(6);
+    //Array<int> R2(4);
+
+    //for (int i = 0; i < R1.GetSize(); i++)
+    //    R1[i] = i + 1;
+    //for (int i = 0; i < R2.GetSize(); i++)
+    //    R2[i] = i + 2;
+
+    //std::cout << "R1: " << R1;
+
+    //std::cout << "\nElement:" << FindMostPopularEl(R1);
 
     return 0;
      

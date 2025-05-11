@@ -6,7 +6,7 @@ Graph::Graph(const int vertices):m_vertices(vertices) {
     std::vector<std::vector<int>> back(m_vertices);
     m_graph = back;
 }
-
+/*
 Graph::Graph(const BoolMatrix& matrix) {
     if (matrix.GetAmountOfCols() != matrix.GetAmountOfRows())
         std::cout << "ERROR!!!!!\n";
@@ -17,9 +17,29 @@ Graph::Graph(const BoolMatrix& matrix) {
     m_graph = back;
 }
 
+*/
+
 void Graph::AddEdge(const int vertices,const int edge) {
     m_graph[vertices].push_back(edge);
 }
+/*
+void Graph::AddEdges(const BoolMatrix& matrix) {
+    for (int step = 0; step < 6; step++) {
+        int index = 6;
+        int mask = 1 << index;
+        int weight = 0;
+        while (weight != matrix.Weight(step)) {
+            if ((matrix[step] & mask)) {
+                weight++;
+                AddEdge(step, index);
+            }
+            index--;
+            mask = mask << index;
+        }
+    }
+}
+
+*/
 
 void Graph::DFS(const int index, std::vector<bool>& visited, std::vector<int>& order) {
     visited[index] = true;

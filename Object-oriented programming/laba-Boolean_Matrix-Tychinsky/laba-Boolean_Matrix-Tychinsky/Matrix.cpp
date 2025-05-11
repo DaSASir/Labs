@@ -1,10 +1,10 @@
-#include <iostream>
+п»ї#include <iostream>
 #include <cassert>
 #include "Matrix.h"
 
 #include <algorithm>
 
-//конструкторы и деструктор
+//РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂС‹ Рё РґРµСЃС‚СЂСѓРєС‚РѕСЂ
 BoolMatrix::BoolMatrix(const int cols, const int rows, const bool value) : m_cols(cols), m_rows(rows) {
 	assert(cols >= 0 && rows >= 0);
 	m_vectors = new BoolVector[m_rows];
@@ -29,7 +29,7 @@ BoolMatrix::~BoolMatrix() {
 	delete[] m_vectors;
 }
 
-//кол-во строк и столбцов и обмен матриц
+//РєРѕР»-РІРѕ СЃС‚СЂРѕРє Рё СЃС‚РѕР»Р±С†РѕРІ Рё РѕР±РјРµРЅ РјР°С‚СЂРёС†
 int BoolMatrix::AmountOfRows() const {
 	return m_rows;
 }
@@ -45,7 +45,7 @@ void BoolMatrix::Swap(BoolMatrix& other) {
 	swap(m_vectors, other.m_vectors);
 }
 
-//ввод и вывод
+//РІРІРѕРґ Рё РІС‹РІРѕРґ
 void BoolMatrix::Print() const {
 	for (int i = 0; i < m_rows; i++) 
 		m_vectors[i].Print();
@@ -57,7 +57,7 @@ void BoolMatrix::Scan() {
 		m_vectors[i].Scan();
 }
 
-//конъюкция и дизъюнкция всех строк
+//РєРѕРЅСЉСЋРєС†РёСЏ Рё РґРёР·СЉСЋРЅРєС†РёСЏ РІСЃРµС… СЃС‚СЂРѕРє
 BoolVector BoolMatrix::ConjunctionOfRows() const {
 	BoolVector back(m_vectors[0]);
 	for (int i = 1; i < m_rows; i++) 
@@ -72,7 +72,7 @@ BoolVector BoolMatrix::DisjunctionOfRows() const {
 	return back;
 }
 
-//вес матрицы и строки
+//РІРµСЃ РјР°С‚СЂРёС†С‹ Рё СЃС‚СЂРѕРєРё
 int BoolMatrix::Weight() const {
 	int weight = 0;
 	for (int i = 0; i < m_rows; i++)
@@ -85,7 +85,7 @@ int BoolMatrix::Weight(const int row) const {
 	return m_vectors[row].WeightVector();
 }
 
-//инверсии
+//РёРЅРІРµСЂСЃРёРё
 void BoolMatrix::Inversion(const int col, const int row) {
 	assert(col >= 0 && col < m_cols && row < m_rows && row >= 0);
 	m_vectors[row].Inversion(col);
@@ -97,7 +97,7 @@ void BoolMatrix::Inversion(const int from, const int row, const int to) {
 		m_vectors[row].Inversion(i);
 }
 
-//вставки битов
+//РІСЃС‚Р°РІРєРё Р±РёС‚РѕРІ
 void BoolMatrix::Set(const bool value, const int col, const int row) {
 	assert(row >= 0 && row < m_rows);
 	m_vectors[row].Set(value, col);
@@ -108,7 +108,7 @@ void BoolMatrix::Set(const bool value, const int from, const int row, const int 
 	m_vectors[row].Set(value, from, to);
 }
 
-//перегрузки
+//РїРµСЂРµРіСЂСѓР·РєРё
 BoolMatrix& BoolMatrix::operator = (const BoolMatrix& other) {
 	if (this != &other) {
 		m_rows = other.m_rows;
@@ -179,7 +179,7 @@ BoolMatrix BoolMatrix::operator ~ () const {
 	return back;
 }
 
-//потоковый ввод и вывод
+//РїРѕС‚РѕРєРѕРІС‹Р№ РІРІРѕРґ Рё РІС‹РІРѕРґ
 std::ostream& operator << (std::ostream& stream, const BoolMatrix& bm) {
 	for (int i = 0; i < bm.AmountOfRows(); i++)
 		stream << bm[i];

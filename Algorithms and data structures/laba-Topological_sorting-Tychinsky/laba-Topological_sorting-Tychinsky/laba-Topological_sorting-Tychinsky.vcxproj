@@ -127,10 +127,14 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\..\Object-oriented programming\laba-Boolean_Matrix-Tychinsky\laba-Boolean_Matrix-Tychinsky\Matrix.cpp" />
+    <ClCompile Include="..\..\..\Object-oriented programming\laba-List-Tychinsky\laba-List-Tychinsky\List.cpp" />
     <ClCompile Include="laba-Topological_sorting-Tychinsky.cpp" />
     <ClCompile Include="Top.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\..\Object-oriented programming\laba-Boolean_Matrix-Tychinsky\laba-Boolean_Matrix-Tychinsky\Matrix.h" />
+    <ClInclude Include="..\..\..\Object-oriented programming\laba-List-Tychinsky\laba-List-Tychinsky\List.h" />
     <ClInclude Include="Top.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

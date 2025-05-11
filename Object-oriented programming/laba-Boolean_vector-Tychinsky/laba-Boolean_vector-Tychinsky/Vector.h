@@ -51,7 +51,7 @@ public:
 private:
     static Cell _mask(const int index);
 
-private:
+protected:
 	Cell* m_cells = nullptr;
 	int m_cell_count = 0;
 	int m_length = 0;

@@ -41,3 +41,7 @@ struct Plenty : protected  BoolVector {
 
 std::ostream& operator << (std::ostream& stream, const Plenty& set);
 std::istream& operator >> (std::istream& stream, Plenty& set);
+
+
+
+

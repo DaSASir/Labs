@@ -8,7 +8,7 @@ public:
 
     Array();
     Array(const int size);
-    Array(T* array, const int size);
+    Array(const T* array, const int size);
     Array(const Array<T>& other);
     ~Array();
 
@@ -49,6 +49,9 @@ public:
     bool operator == (const Array<T>& other) const;
     bool operator != (const Array<T>& other) const;
 
+    Array<T> operator - (const Array<T>& other) const;
+
+
 private:
     T* m_data = nullptr;
     int m_size = 0;
@@ -64,7 +67,7 @@ Array<T>::Array(const int size) : m_size(size) {
 }
 
 template <typename T>
-Array<T>::Array(T* array, const int size) : m_size(size) {
+Array<T>::Array(const T* array, const int size) : m_size(size) {
     m_data = new T[m_size];
     for (int i = 0; i < m_size; i++)
         m_data[i] = array[i];
@@ -137,7 +140,8 @@ void Array<T>::Swap(Array<T>& other) {
 template <typename T>
 int Array<T>::FindElement(const T& value) const {
     for (int i = 0; i < m_size; i++)
-        if (m_data[i] == value) return i;
+        if (m_data[i] == value) 
+            return i;
     return -1;
 }
 
@@ -170,7 +174,6 @@ bool Array<T>::AddIndex(const int index, const T& value) {
 
     delete[] m_data;
     m_data = back;
-    delete[] back;
 
     m_size++;
 
@@ -191,7 +194,6 @@ bool Array<T>::DelIndex(const int index) {
 
     delete[] m_data;
     m_data = back;
-    delete[] back;
 
     m_size--;
 
@@ -353,3 +355,17 @@ std::istream& operator>>(std::istream& stream, const Array<T>& array) {
     
     return stream;
 }
+
+
+
+template <typename T>
+Array<T> Array<T>::operator - (const Array<T>& other) const {
+    Array<T> back(*this);
+
+    for (int i = 0; i < other.m_size; i++)
+        back.DelAll(other[i]);
+
+    return back;
+}
+
+

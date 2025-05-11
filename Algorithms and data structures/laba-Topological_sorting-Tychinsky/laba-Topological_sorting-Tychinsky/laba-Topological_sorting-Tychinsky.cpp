@@ -4,8 +4,9 @@
 
 int main() {
 	setlocale(LC_ALL, "ru");
+    const int size = 6;
 
-	Graph gg(6);
+	Graph gg(size);
 
     gg.AddEdge(5, 2);
     gg.AddEdge(5, 0);
@@ -18,16 +19,7 @@ int main() {
     
     std::cout << "\n";
 
-    BoolMatrix m(6, 6, 0);
-
-    m.Inversion(2, 5);
-    m.Inversion(0, 5);
-    m.Inversion(0, 4);
-    m.Inversion(1, 4);
-    m.Inversion(3, 2);
-    m.Inversion(1, 3);
-
-
+    
 
 	return 0;
 }
